@@ -5,8 +5,36 @@
     <title>TRASHEDGOODS.STORE - Admin Panel</title>
     <link rel="stylesheet" type="text/css" href="style.css" />
     <script type="text/javascript" src="admin.js"></script>
+    <script type="text/javascript">
+        // Check authentication on page load
+        function checkAuth() {
+            var loggedIn = localStorage.getItem('tgs_admin_logged_in');
+            var session = localStorage.getItem('tgs_admin_session');
+
+            if (loggedIn !== 'true' || !session) {
+                window.location.href = 'login.html';
+                return;
+            }
+
+            // Check if session is still valid (24 hours)
+            var sessionTime = parseInt(session);
+            var currentTime = Date.now();
+            var hoursPassed = (currentTime - sessionTime) / (1000 * 60 * 60);
+
+            if (hoursPassed >= 24) {
+                // Session expired
+                localStorage.removeItem('tgs_admin_logged_in');
+                localStorage.removeItem('tgs_admin_session');
+                window.location.href = 'login.html';
+                return;
+            }
+
+            // Authentication successful, load admin data
+            loadAdminData();
+        }
+    </script>
 </head>
-<body onload="loadAdminData()">
+<body onload="checkAuth()">
 
 <!-- Header -->
 <table width="100%" border="0" cellpadding="0" cellspacing="0" bgcolor="#FFFFFF">
@@ -50,6 +78,23 @@
 <table width="980" border="0" align="center" cellpadding="10" cellspacing="0">
     <tr>
         <td valign="top">
+
+            <!-- Data Export/Import -->
+            <table width="100%" border="1" cellpadding="10" cellspacing="0" bordercolor="#CCCCCC" bgcolor="#FFFFEE">
+                <tr>
+                    <td align="center">
+                        <font size="2">
+                        <b>Save Data for GitHub Pages:</b>
+                        <input type="button" value="Export Data to File" onclick="exportData()" />
+                        &nbsp;&nbsp;|&nbsp;&nbsp;
+                        <b>Load Data:</b>
+                        <input type="file" id="importFile" accept=".json" onchange="importData()" />
+                        </font>
+                    </td>
+                </tr>
+            </table>
+
+            <br />
 
             <!-- Tab Navigation -->
             <table width="100%" border="0" cellpadding="5" cellspacing="0">

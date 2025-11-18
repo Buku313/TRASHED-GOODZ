@@ -138,10 +138,37 @@ function initializeData() {
 
 // Main function to load all store data
 function loadStoreData() {
-    initializeData();
-    loadCategories();
-    loadHotCategories();
-    loadFeaturedItems();
+    // Try to load from data.json first (for GitHub Pages)
+    fetch('data.json')
+        .then(function(response) {
+            if (response.ok) {
+                return response.json();
+            }
+            throw new Error('No data.json file found');
+        })
+        .then(function(data) {
+            // Save fetched data to localStorage
+            if (data.items) {
+                localStorage.setItem('tgs_items', JSON.stringify(data.items));
+            }
+            if (data.categories) {
+                localStorage.setItem('tgs_categories', JSON.stringify(data.categories));
+            }
+            if (data.hotCategories) {
+                localStorage.setItem('tgs_hotCategories', JSON.stringify(data.hotCategories));
+            }
+            // Load the UI
+            loadCategories();
+            loadHotCategories();
+            loadFeaturedItems();
+        })
+        .catch(function(error) {
+            // Fallback to localStorage or initialize defaults
+            initializeData();
+            loadCategories();
+            loadHotCategories();
+            loadFeaturedItems();
+        });
 }
 
 // Load sidebar categories

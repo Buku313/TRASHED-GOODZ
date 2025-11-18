@@ -434,6 +434,68 @@ function clearHotCategoryForm() {
 // Logout function
 function logout() {
     if (confirm('Are you sure you want to logout?')) {
-        window.location.href = 'index.html';
+        localStorage.removeItem('tgs_admin_logged_in');
+        localStorage.removeItem('tgs_admin_session');
+        window.location.href = 'login.html';
     }
+}
+
+// Export data to JSON file
+function exportData() {
+    var data = {
+        items: JSON.parse(localStorage.getItem('tgs_items')) || [],
+        categories: JSON.parse(localStorage.getItem('tgs_categories')) || [],
+        hotCategories: JSON.parse(localStorage.getItem('tgs_hotCategories')) || []
+    };
+
+    var jsonStr = JSON.stringify(data, null, 2);
+    var blob = new Blob([jsonStr], { type: 'application/json' });
+    var url = URL.createObjectURL(blob);
+
+    var a = document.createElement('a');
+    a.href = url;
+    a.download = 'store-data.json';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+
+    alert('Data exported successfully! Save this file as "data.json" in your repository root and commit it to GitHub.');
+}
+
+// Import data from JSON file
+function importData() {
+    var fileInput = document.getElementById('importFile');
+    var file = fileInput.files[0];
+
+    if (!file) {
+        return;
+    }
+
+    var reader = new FileReader();
+    reader.onload = function(e) {
+        try {
+            var data = JSON.parse(e.target.result);
+
+            if (data.items) {
+                localStorage.setItem('tgs_items', JSON.stringify(data.items));
+            }
+            if (data.categories) {
+                localStorage.setItem('tgs_categories', JSON.stringify(data.categories));
+            }
+            if (data.hotCategories) {
+                localStorage.setItem('tgs_hotCategories', JSON.stringify(data.hotCategories));
+            }
+
+            alert('Data imported successfully!');
+            loadItems();
+            loadCategories();
+            loadHotCategories();
+        } catch (error) {
+            alert('Error importing data: ' + error.message);
+        }
+    };
+
+    reader.readAsText(file);
+    fileInput.value = '';
 }
