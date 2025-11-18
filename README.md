@@ -25,14 +25,13 @@ Visit the store at: https://buku313.github.io/TRASHED-GOODZ/
    - Enable "repo" permission
    - Copy the token
 
-2. **Configure:** Edit `github-config.js` and paste your token:
-   ```javascript
-   token: 'ghp_your_token_here'
+2. **Configure (LOCAL ONLY):**
+   ```bash
+   cp github-config.example.js github-config.js
    ```
+   Then edit `github-config.js` and paste your token (this file is gitignored - never commit it!)
 
-3. **Commit:** `git add github-config.js && git commit -m "Enable auto-save" && git push`
-
-4. **Done!** Now when you add/edit/delete items, they automatically save to GitHub!
+3. **Done!** Now when you add/edit/delete items in the admin panel, they automatically save to GitHub!
 
 **See [SETUP_AUTO_SAVE.md](SETUP_AUTO_SAVE.md) for detailed instructions.**
 

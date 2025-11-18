@@ -12,30 +12,24 @@ To enable seamless auto-save (so changes go live automatically), you need to con
 6. Click "Generate token"
 7. **COPY THE TOKEN** - you won't see it again!
 
-## Step 2: Configure the Token
+## Step 2: Configure the Token (LOCAL ONLY - DO NOT COMMIT!)
 
-1. Open `github-config.js` in your repository
-2. Replace `'YOUR_GITHUB_TOKEN_HERE'` with your actual token
-3. Verify the owner and repo names are correct:
-   ```javascript
-   var GITHUB_CONFIG = {
-       owner: 'Buku313',
-       repo: 'TRASHED-GOODZ',
-       token: 'ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx', // Your token here
-       branch: 'main',
-       dataFile: 'data.json'
-   };
+1. Copy the template file:
+   ```bash
+   cp github-config.example.js github-config.js
    ```
 
-## Step 3: Commit and Push
+2. Open `github-config.js` (this file is ignored by git)
+3. Replace `'YOUR_GITHUB_TOKEN_HERE'` with your actual token:
+   ```javascript
+   token: 'ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'
+   ```
 
-```bash
-git add github-config.js
-git commit -m "Configure GitHub API for auto-save"
-git push
-```
+4. Save the file (DO NOT commit it - it's in .gitignore)
 
-## Step 4: Test Auto-Save
+**IMPORTANT:** The `github-config.js` file stays LOCAL on your computer only. It's in `.gitignore` so it won't be committed to GitHub. This keeps your token secure!
+
+## Step 3: Test Auto-Save
 
 1. Go to your admin panel: https://buku313.github.io/TRASHED-GOODZ/login.html
 2. Login (admin / trashedgoods2008)
