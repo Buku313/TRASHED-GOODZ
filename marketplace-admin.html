@@ -6,7 +6,7 @@
     <link rel="stylesheet" type="text/css" href="style.css" />
     <script type="text/javascript" src="github-config.js" onerror="console.log('github-config.js not found - auto-save disabled')"></script>
     <script type="text/javascript" src="github-api.js"></script>
-    <script type="text/javascript" src="image-utils.js"></script>
+    <script type="text/javascript" src="image-utils-secure.js"></script>
     <script type="text/javascript" src="marketplace-admin.js"></script>
     <script type="text/javascript">
         // Check authentication on page load
@@ -289,15 +289,22 @@
                                     <tr>
                                         <td valign="top"><b>Product Images:</b></td>
                                         <td>
-                                            <div class="image-upload-zone" onclick="document.getElementById('imageUpload').click()">
-                                                <b>📷 Click to Upload Images</b><br />
-                                                <font size="2">JPG, PNG (will be compressed)</font>
-                                            </div>
-                                            <input type="file" id="imageUpload" accept="image/*" multiple style="display:none;" onchange="handleImageSelect(event)" />
+                                            <b>Enter Image URLs (one per line):</b><br />
+                                            <textarea id="productImageUrls" rows="4" cols="58" placeholder="https://raw.githubusercontent.com/Buku313/TRASHED-GOODZ/main/images/product1.jpg
+https://raw.githubusercontent.com/Buku313/TRASHED-GOODZ/main/images/product2.jpg"></textarea>
+                                            <br /><br />
+                                            <font size="2">
+                                            📱 <b>How to add images:</b><br />
+                                            1. Upload photos to <a href="https://github.com/Buku313/TRASHED-GOODZ/tree/main/images" target="_blank">GitHub images folder</a><br />
+                                            2. Click on image → <b>Raw</b> button<br />
+                                            3. Copy URL and paste above<br />
+                                            <a href="SECURE_UPLOAD_GUIDE.md" target="_blank">→ Full guide</a>
+                                            </font>
                                             <br /><br />
                                             <div id="imagePreviewContainer">
-                                                <p>No images uploaded yet</p>
+                                                <p>Images will preview here</p>
                                             </div>
+                                            <input type="button" value="Preview Images" onclick="previewProductImages()" />
                                         </td>
                                     </tr>
                                     <tr>

@@ -180,31 +180,15 @@ function loadDashboard() {
     document.getElementById('orderCount').textContent = orders.length;
 }
 
-// Handle image file selection
-function handleImageSelect(event) {
-    var files = event.target.files;
-    if (files.length === 0) return;
+// Preview product images from URLs
+function previewProductImages() {
+    var urlsText = document.getElementById('productImageUrls').value;
+    var urls = urlsText.split('\n').filter(function(url) {
+        return url.trim().length > 0;
+    });
 
-    var previewContainer = document.getElementById('imagePreviewContainer');
-    previewContainer.innerHTML = '<p>Uploading images...</p>';
-
-    uploadMultipleImages(files,
-        function(index, status, message) {
-            // Progress callback
-            console.log('Image ' + index + ': ' + status + ' - ' + message);
-        },
-        function(success, urls) {
-            // Complete callback
-            if (success && urls.length > 0) {
-                uploadedImages = uploadedImages.concat(urls);
-                renderImagePreviews();
-                alert('Images uploaded successfully!');
-            } else {
-                alert('Some images failed to upload. Check console for details.');
-                renderImagePreviews();
-            }
-        }
-    );
+    uploadedImages = urls;
+    renderImagePreviews();
 }
 
 // Render image previews
@@ -304,6 +288,9 @@ function editProduct(id) {
     document.getElementById('productStock').value = product.stock;
     document.getElementById('productCondition').value = product.condition;
 
+    // Set image URLs
+    document.getElementById('productImageUrls').value = product.images.join('\n');
+
     renderImagePreviews();
 
     // Show form section and scroll to top
@@ -400,6 +387,7 @@ function markAsSold(id) {
 // Clear product form
 function clearProductForm() {
     document.getElementById('productForm').reset();
+    document.getElementById('productImageUrls').value = '';
     currentProductId = null;
     uploadedImages = [];
     renderImagePreviews();
