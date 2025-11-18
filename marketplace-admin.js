@@ -222,7 +222,17 @@ function removeImage(index) {
 
 // Save product (draft or published)
 function saveProduct(event, publishNow) {
-    event.preventDefault();
+    if (event && event.preventDefault) {
+        event.preventDefault();
+    }
+
+    // Get image URLs from textarea
+    var urlsText = document.getElementById('productImageUrls').value;
+    var imageUrls = urlsText.split('\n').filter(function(url) {
+        return url.trim().length > 0;
+    }).map(function(url) {
+        return url.trim();
+    });
 
     var products = JSON.parse(localStorage.getItem('tgs_products')) || [];
     var productId = currentProductId || generateUUID();
@@ -232,7 +242,7 @@ function saveProduct(event, publishNow) {
         name: document.getElementById('productName').value,
         description: document.getElementById('productDescription').value,
         price: parseFloat(document.getElementById('productPrice').value),
-        images: uploadedImages.slice(), // Copy array
+        images: imageUrls,
         category: document.getElementById('productCategory').value,
         status: publishNow ? 'published' : 'draft',
         stock: parseInt(document.getElementById('productStock').value),
@@ -243,8 +253,8 @@ function saveProduct(event, publishNow) {
         updatedAt: new Date().toISOString()
     };
 
-    if (uploadedImages.length === 0) {
-        if (!confirm('No images uploaded. Continue anyway?')) {
+    if (imageUrls.length === 0) {
+        if (!confirm('No images added. Continue anyway?')) {
             return;
         }
     }
