@@ -4,8 +4,9 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <title>TRASHEDGOODS.STORE - Buy & Sell Electronics, Cars, Fashion, and More</title>
     <link rel="stylesheet" type="text/css" href="style.css" />
+    <script type="text/javascript" src="store.js"></script>
 </head>
-<body>
+<body onload="loadStoreData()">
 
 <!-- Header -->
 <table width="100%" border="0" cellpadding="0" cellspacing="0" bgcolor="#FFFFFF">
@@ -21,7 +22,8 @@
                         <a href="#">Register</a> |
                         <a href="#">Sign In</a> |
                         <a href="#">Help</a> |
-                        <a href="#">My Account</a>
+                        <a href="#">My Account</a> |
+                        <a href="admin.html">Admin</a>
                         </font>
                     </td>
                 </tr>
@@ -105,39 +107,8 @@
                 </tr>
                 <tr>
                     <td>
-                        <font size="2">
-                        <a href="#">Antiques</a><br />
-                        <a href="#">Art</a><br />
-                        <a href="#">Books</a><br />
-                        <a href="#">Business & Industrial</a><br />
-                        <a href="#">Cameras & Photo</a><br />
-                        <a href="#">Cell Phones & PDAs</a><br />
-                        <a href="#">Clothing, Shoes & Accessories</a><br />
-                        <a href="#">Coins & Paper Money</a><br />
-                        <a href="#">Collectibles</a><br />
-                        <a href="#">Computers & Networking</a><br />
-                        <a href="#">Consumer Electronics</a><br />
-                        <a href="#">Crafts</a><br />
-                        <a href="#">Dolls & Bears</a><br />
-                        <a href="#">DVDs & Movies</a><br />
-                        <a href="#">Entertainment Memorabilia</a><br />
-                        <a href="#">Gift Certificates</a><br />
-                        <a href="#">Health & Beauty</a><br />
-                        <a href="#">Home & Garden</a><br />
-                        <a href="#">Jewelry & Watches</a><br />
-                        <a href="#">Music</a><br />
-                        <a href="#">Musical Instruments</a><br />
-                        <a href="#">Pet Supplies</a><br />
-                        <a href="#">Pottery & Glass</a><br />
-                        <a href="#">Real Estate</a><br />
-                        <a href="#">Sporting Goods</a><br />
-                        <a href="#">Sports Mem, Cards & Fan Shop</a><br />
-                        <a href="#">Stamps</a><br />
-                        <a href="#">Tickets</a><br />
-                        <a href="#">Toys & Hobbies</a><br />
-                        <a href="#">Travel</a><br />
-                        <a href="#">Video Games</a><br />
-                        <a href="#"><b>Everything Else</b></a>
+                        <font size="2" id="categoriesContainer">
+                        <!-- Categories loaded dynamically -->
                         </font>
                     </td>
                 </tr>
@@ -180,51 +151,8 @@
                 <tr>
                     <td colspan="4" bgcolor="#F0F0F0"><b>Hot Categories</b></td>
                 </tr>
-                <tr>
-                    <td width="25%" align="center" valign="top">
-                        <table border="1" cellpadding="5" cellspacing="0" bordercolor="#CCCCCC" width="100%">
-                            <tr>
-                                <td align="center">
-                                    <img src="https://via.placeholder.com/100x100?text=Electronics" width="100" height="100" alt="Electronics" /><br />
-                                    <b><a href="#">Electronics</a></b><br />
-                                    <font size="1">Hot deals on laptops, cameras, and more!</font>
-                                </td>
-                            </tr>
-                        </table>
-                    </td>
-                    <td width="25%" align="center" valign="top">
-                        <table border="1" cellpadding="5" cellspacing="0" bordercolor="#CCCCCC" width="100%">
-                            <tr>
-                                <td align="center">
-                                    <img src="https://via.placeholder.com/100x100?text=Fashion" width="100" height="100" alt="Fashion" /><br />
-                                    <b><a href="#">Fashion</a></b><br />
-                                    <font size="1">Latest trends in clothing & shoes</font>
-                                </td>
-                            </tr>
-                        </table>
-                    </td>
-                    <td width="25%" align="center" valign="top">
-                        <table border="1" cellpadding="5" cellspacing="0" bordercolor="#CCCCCC" width="100%">
-                            <tr>
-                                <td align="center">
-                                    <img src="https://via.placeholder.com/100x100?text=Home" width="100" height="100" alt="Home" /><br />
-                                    <b><a href="#">Home & Garden</a></b><br />
-                                    <font size="1">Everything for your home</font>
-                                </td>
-                            </tr>
-                        </table>
-                    </td>
-                    <td width="25%" align="center" valign="top">
-                        <table border="1" cellpadding="5" cellspacing="0" bordercolor="#CCCCCC" width="100%">
-                            <tr>
-                                <td align="center">
-                                    <img src="https://via.placeholder.com/100x100?text=Collectibles" width="100" height="100" alt="Collectibles" /><br />
-                                    <b><a href="#">Collectibles</a></b><br />
-                                    <font size="1">Find rare & unique items</font>
-                                </td>
-                            </tr>
-                        </table>
-                    </td>
+                <tr id="hotCategoriesContainer">
+                    <!-- Hot Categories loaded dynamically -->
                 </tr>
             </table>
 
@@ -235,88 +163,9 @@
                 <tr>
                     <td colspan="3" bgcolor="#F0F0F0"><b>Featured Listings - Ending Soon!</b></td>
                 </tr>
-                <tr>
-                    <td width="33%" valign="top">
-                        <table width="100%" border="1" cellpadding="5" cellspacing="0" bordercolor="#CCCCCC">
-                            <tr>
-                                <td align="center">
-                                    <img src="https://via.placeholder.com/150x150?text=Item+1" width="150" height="150" alt="Product" /><br />
-                                    <a href="#"><b>Apple iPod Classic 80GB</b></a><br />
-                                    <font size="2" color="#CC0000"><b>$89.99</b></font><br />
-                                    <font size="1">0 bids | 2h 15m left</font><br />
-                                    <font size="1">Buy It Now available</font>
-                                </td>
-                            </tr>
-                        </table>
-                    </td>
-                    <td width="33%" valign="top">
-                        <table width="100%" border="1" cellpadding="5" cellspacing="0" bordercolor="#CCCCCC">
-                            <tr>
-                                <td align="center">
-                                    <img src="https://via.placeholder.com/150x150?text=Item+2" width="150" height="150" alt="Product" /><br />
-                                    <a href="#"><b>Sony PlayStation 3 Console</b></a><br />
-                                    <font size="2" color="#CC0000"><b>$249.00</b></font><br />
-                                    <font size="1">12 bids | 1h 32m left</font><br />
-                                    <font size="1">Free shipping</font>
-                                </td>
-                            </tr>
-                        </table>
-                    </td>
-                    <td width="33%" valign="top">
-                        <table width="100%" border="1" cellpadding="5" cellspacing="0" bordercolor="#CCCCCC">
-                            <tr>
-                                <td align="center">
-                                    <img src="https://via.placeholder.com/150x150?text=Item+3" width="150" height="150" alt="Product" /><br />
-                                    <a href="#"><b>Canon EOS Digital Rebel XTi</b></a><br />
-                                    <font size="2" color="#CC0000"><b>$399.99</b></font><br />
-                                    <font size="1">5 bids | 3h 45m left</font><br />
-                                    <font size="1">New in box</font>
-                                </td>
-                            </tr>
-                        </table>
-                    </td>
-                </tr>
-                <tr>
-                    <td width="33%" valign="top">
-                        <table width="100%" border="1" cellpadding="5" cellspacing="0" bordercolor="#CCCCCC">
-                            <tr>
-                                <td align="center">
-                                    <img src="https://via.placeholder.com/150x150?text=Item+4" width="150" height="150" alt="Product" /><br />
-                                    <a href="#"><b>Nintendo Wii Console Bundle</b></a><br />
-                                    <font size="2" color="#CC0000"><b>$199.99</b></font><br />
-                                    <font size="1">8 bids | 4h 12m left</font><br />
-                                    <font size="1">Ships worldwide</font>
-                                </td>
-                            </tr>
-                        </table>
-                    </td>
-                    <td width="33%" valign="top">
-                        <table width="100%" border="1" cellpadding="5" cellspacing="0" bordercolor="#CCCCCC">
-                            <tr>
-                                <td align="center">
-                                    <img src="https://via.placeholder.com/150x150?text=Item+5" width="150" height="150" alt="Product" /><br />
-                                    <a href="#"><b>Dell Inspiron Laptop 15.4"</b></a><br />
-                                    <font size="2" color="#CC0000"><b>$449.00</b></font><br />
-                                    <font size="1">3 bids | 5h 28m left</font><br />
-                                    <font size="1">Refurbished</font>
-                                </td>
-                            </tr>
-                        </table>
-                    </td>
-                    <td width="33%" valign="top">
-                        <table width="100%" border="1" cellpadding="5" cellspacing="0" bordercolor="#CCCCCC">
-                            <tr>
-                                <td align="center">
-                                    <img src="https://via.placeholder.com/150x150?text=Item+6" width="150" height="150" alt="Product" /><br />
-                                    <a href="#"><b>Vintage Levi's Jeans Collection</b></a><br />
-                                    <font size="2" color="#CC0000"><b>$59.99</b></font><br />
-                                    <font size="1">1 bid | 6h 03m left</font><br />
-                                    <font size="1">Excellent condition</font>
-                                </td>
-                            </tr>
-                        </table>
-                    </td>
-                </tr>
+                <tbody id="featuredItemsContainer">
+                    <!-- Featured items loaded dynamically -->
+                </tbody>
             </table>
 
             <br />
