@@ -4,7 +4,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <title>TRASHEDGOODS.STORE - Admin Panel</title>
     <link rel="stylesheet" type="text/css" href="style.css" />
-    <script type="text/javascript" src="github-config.js"></script>
+    <script type="text/javascript" src="github-config.js" onerror="console.log('github-config.js not found - auto-save disabled')"></script>
     <script type="text/javascript" src="github-api.js"></script>
     <script type="text/javascript" src="admin.js"></script>
     <script type="text/javascript">
@@ -82,19 +82,36 @@
         <td valign="top">
 
             <!-- Auto-Save Status -->
-            <table width="100%" border="1" cellpadding="10" cellspacing="0" bordercolor="#CCCCCC" bgcolor="#E6F7FF">
+            <table width="100%" border="1" cellpadding="10" cellspacing="0" bordercolor="#CCCCCC" id="autoSaveStatus">
                 <tr>
                     <td align="center">
-                        <font size="3">
-                        <b>🚀 SEAMLESS AUTO-SAVE ENABLED</b><br />
+                        <font size="3" id="autoSaveTitle">
+                        <b>Loading...</b><br />
                         </font>
-                        <font size="2">
-                        Changes automatically save to GitHub and go live in 1-2 minutes!<br />
+                        <font size="2" id="autoSaveMessage">
                         <span id="savingIndicator"></span>
                         </font>
                     </td>
                 </tr>
             </table>
+            <script type="text/javascript">
+                // Check if auto-save is available
+                (function() {
+                    var statusBox = document.getElementById('autoSaveStatus');
+                    var title = document.getElementById('autoSaveTitle');
+                    var message = document.getElementById('autoSaveMessage');
+
+                    if (typeof GITHUB_CONFIG !== 'undefined' && GITHUB_CONFIG.token && GITHUB_CONFIG.token !== 'YOUR_GITHUB_TOKEN_HERE') {
+                        statusBox.style.backgroundColor = '#E6F7FF';
+                        title.innerHTML = '<b>🚀 SEAMLESS AUTO-SAVE ENABLED</b><br />';
+                        message.innerHTML = 'Changes automatically save to GitHub and go live in 1-2 minutes!<br /><span id="savingIndicator"></span>';
+                    } else {
+                        statusBox.style.backgroundColor = '#FFF3CD';
+                        title.innerHTML = '<b>⚠️ AUTO-SAVE NOT CONFIGURED</b><br />';
+                        message.innerHTML = 'Use "Export Data to File" button below to save changes.<br />See <a href="SETUP_AUTO_SAVE.md" target="_blank">setup guide</a> to enable auto-save.';
+                    }
+                })();
+            </script>
 
             <br />
 

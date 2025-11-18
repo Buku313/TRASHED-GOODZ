@@ -3,8 +3,16 @@
 
 // Save data to GitHub repository
 function saveToGitHub(callback) {
+    // Check if github-config.js is loaded
+    if (typeof GITHUB_CONFIG === 'undefined') {
+        alert('AUTO-SAVE NOT AVAILABLE ON GITHUB PAGES\n\nAuto-save only works when running locally because your GitHub token must stay private.\n\nTo update the live site:\n1. Click "Export Data to File"\n2. Save as data.json\n3. Commit to GitHub\n\nOR run the admin panel locally for auto-save.');
+        if (callback) callback(false);
+        return;
+    }
+
     if (!isGitHubConfigured()) {
         alert('GitHub integration not configured!\n\nPlease edit github-config.js and add your GitHub Personal Access Token.\n\nFor now, use the "Export Data to File" button and commit manually.');
+        if (callback) callback(false);
         return;
     }
 
