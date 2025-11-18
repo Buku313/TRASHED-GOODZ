@@ -1,0 +1,50 @@
+/* Minimal CSS for TRASHEDGOODS.STORE - 2008 Style */
+
+body {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 12px;
+    background-color: #FFFFFF;
+}
+
+a {
+    color: #0066CC;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+input[type="text"] {
+    border: 1px solid #999999;
+    padding: 3px;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 12px;
+}
+
+input[type="submit"] {
+    background-color: #FFCC00;
+    border: 1px solid #CC9900;
+    padding: 4px 8px;
+    font-weight: bold;
+    cursor: pointer;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 12px;
+}
+
+input[type="submit"]:hover {
+    background-color: #FFDD33;
+}
+
+select {
+    border: 1px solid #999999;
+    padding: 3px;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 12px;
+}
+
+table {
+    font-size: 12px;
+}
