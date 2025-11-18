@@ -1,0 +1,439 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<parameter name="html">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>TRASHEDGOODS.STORE - Marketplace Manager</title>
+    <link rel="stylesheet" type="text/css" href="style.css" />
+    <script type="text/javascript" src="github-config.js" onerror="console.log('github-config.js not found - auto-save disabled')"></script>
+    <script type="text/javascript" src="github-api.js"></script>
+    <script type="text/javascript" src="image-utils.js"></script>
+    <script type="text/javascript" src="marketplace-admin.js"></script>
+    <script type="text/javascript">
+        // Check authentication on page load
+        function checkAuth() {
+            var loggedIn = localStorage.getItem('tgs_admin_logged_in');
+            var session = localStorage.getItem('tgs_admin_session');
+
+            if (loggedIn !== 'true' || !session) {
+                window.location.href = 'login.html';
+                return;
+            }
+
+            // Check if session is still valid (24 hours)
+            var sessionTime = parseInt(session);
+            var currentTime = Date.now();
+            var hoursPassed = (currentTime - sessionTime) / (1000 * 60 * 60);
+
+            if (hoursPassed >= 24) {
+                localStorage.removeItem('tgs_admin_logged_in');
+                localStorage.removeItem('tgs_admin_session');
+                window.location.href = 'login.html';
+                return;
+            }
+
+            // Load marketplace data
+            loadMarketplaceData();
+        }
+
+        function logout() {
+            if (confirm('Are you sure you want to logout?')) {
+                localStorage.removeItem('tgs_admin_logged_in');
+                localStorage.removeItem('tgs_admin_session');
+                window.location.href = 'login.html';
+            }
+        }
+    </script>
+    <style>
+        .dashboard-stats {
+            display: inline-block;
+            width: 23%;
+            margin: 5px;
+            padding: 15px;
+            background: #f0f0f0;
+            border: 1px solid #ccc;
+            text-align: center;
+        }
+        .stat-number {
+            font-size: 32px;
+            font-weight: bold;
+            color: #3366CC;
+        }
+        .stat-label {
+            font-size: 14px;
+            color: #666;
+        }
+        .image-upload-zone {
+            border: 2px dashed #ccc;
+            padding: 20px;
+            text-align: center;
+            background: #f9f9f9;
+            cursor: pointer;
+        }
+        .image-upload-zone:hover {
+            background: #f0f0f0;
+            border-color: #3366CC;
+        }
+    </style>
+</head>
+<body onload="checkAuth()">
+
+<!-- Header -->
+<table width="100%" border="0" cellpadding="0" cellspacing="0" bgcolor="#FFFFFF">
+    <tr>
+        <td>
+            <table width="980" border="0" align="center" cellpadding="5" cellspacing="0">
+                <tr>
+                    <td width="400">
+                        <font size="6" color="#CC0000"><b>TRASHEDGOODS.STORE</b></font>
+                        <br /><font size="2" color="#666"><b>Marketplace Manager</b></font>
+                    </td>
+                    <td align="right">
+                        <font size="2">
+                        <a href="index.html">View Store</a> |
+                        <a href="#" onclick="logout(); return false;">Logout</a>
+                        </font>
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+</table>
+
+<!-- Navigation -->
+<table width="100%" border="0" cellpadding="0" cellspacing="0" bgcolor="#CC0000">
+    <tr>
+        <td height="30">
+            <table width="980" border="0" align="center" cellpadding="5" cellspacing="0">
+                <tr>
+                    <td>
+                        <font color="#FFFFFF" size="3">
+                        <b>MANAGER CONTROL PANEL</b>
+                        </font>
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+</table>
+
+<!-- Main Content -->
+<table width="980" border="0" align="center" cellpadding="10" cellspacing="0">
+    <tr>
+        <td valign="top">
+
+            <!-- Auto-Save Status -->
+            <table width="100%" border="1" cellpadding="10" cellspacing="0" bordercolor="#CCCCCC" id="autoSaveStatus">
+                <tr>
+                    <td align="center">
+                        <font size="3" id="autoSaveTitle"><b>Loading...</b></font><br />
+                        <font size="2" id="autoSaveMessage">
+                        <span id="savingIndicator"></span>
+                        </font>
+                    </td>
+                </tr>
+            </table>
+            <script type="text/javascript">
+                (function() {
+                    var statusBox = document.getElementById('autoSaveStatus');
+                    var title = document.getElementById('autoSaveTitle');
+                    var message = document.getElementById('autoSaveMessage');
+
+                    if (typeof GITHUB_CONFIG !== 'undefined' && GITHUB_CONFIG.token && GITHUB_CONFIG.token !== 'YOUR_GITHUB_TOKEN_HERE') {
+                        statusBox.style.backgroundColor = '#E6F7FF';
+                        title.innerHTML = '<b>🚀 AUTO-SAVE ENABLED</b>';
+                        message.innerHTML = 'Changes auto-save to GitHub!<br /><span id="savingIndicator"></span>';
+                    } else {
+                        statusBox.style.backgroundColor = '#FFF3CD';
+                        title.innerHTML = '<b>⚠️ AUTO-SAVE NOT CONFIGURED</b>';
+                        message.innerHTML = 'Use "Export Data" to save changes manually.';
+                    }
+                })();
+            </script>
+
+            <br />
+
+            <!-- Manual Save Options -->
+            <table width="100%" border="1" cellpadding="10" cellspacing="0" bordercolor="#CCCCCC" bgcolor="#F5F5F5">
+                <tr>
+                    <td align="center">
+                        <font size="2">
+                        <input type="button" value="💾 Save to GitHub Now" onclick="saveMarketplaceToGitHub()" style="font-weight:bold; padding:5px 10px;" />
+                        &nbsp;&nbsp;|&nbsp;&nbsp;
+                        <input type="button" value="Export Data" onclick="exportMarketplaceData()" />
+                        </font>
+                    </td>
+                </tr>
+            </table>
+
+            <br />
+
+            <!-- Tab Navigation -->
+            <table width="100%" border="0" cellpadding="5" cellspacing="0">
+                <tr bgcolor="#F0F0F0">
+                    <td width="150" align="center" id="dashboardTab" style="cursor:pointer; background-color:#3366CC;" onclick="showTab('dashboard')">
+                        <font color="#FFFFFF"><b>Dashboard</b></font>
+                    </td>
+                    <td width="150" align="center" id="addProductTab" style="cursor:pointer;" onclick="showTab('addProduct')">
+                        <font><b>Add Product</b></font>
+                    </td>
+                    <td width="150" align="center" id="draftProductsTab" style="cursor:pointer;" onclick="showTab('draftProducts')">
+                        <font><b>Drafts</b></font>
+                    </td>
+                    <td width="150" align="center" id="publishedProductsTab" style="cursor:pointer;" onclick="showTab('publishedProducts')">
+                        <font><b>Published</b></font>
+                    </td>
+                    <td width="150" align="center" id="categoriesTab" style="cursor:pointer;" onclick="showTab('categories')">
+                        <font><b>Categories</b></font>
+                    </td>
+                    <td>&nbsp;</td>
+                </tr>
+            </table>
+
+            <br />
+
+            <!-- DASHBOARD SECTION -->
+            <div id="dashboardSection">
+                <table width="100%" border="1" cellpadding="15" cellspacing="0" bordercolor="#CCCCCC">
+                    <tr bgcolor="#3366CC">
+                        <td><font color="#FFFFFF" size="4"><b>📊 Marketplace Overview</b></font></td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="dashboard-stats">
+                                <div class="stat-number" id="draftCount">0</div>
+                                <div class="stat-label">Draft Products</div>
+                            </div>
+                            <div class="dashboard-stats">
+                                <div class="stat-number" id="publishedCount">0</div>
+                                <div class="stat-label">Published</div>
+                            </div>
+                            <div class="dashboard-stats">
+                                <div class="stat-number" id="soldCount">0</div>
+                                <div class="stat-label">Sold</div>
+                            </div>
+                            <div class="dashboard-stats">
+                                <div class="stat-number" id="totalStock">0</div>
+                                <div class="stat-label">Total Stock</div>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+
+                <br />
+
+                <table width="100%" border="1" cellpadding="15" cellspacing="0" bordercolor="#CCCCCC">
+                    <tr bgcolor="#3366CC">
+                        <td><font color="#FFFFFF" size="4"><b>💰 Sales Overview</b></font></td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="dashboard-stats">
+                                <div class="stat-number" id="totalRevenue">$0.00</div>
+                                <div class="stat-label">Total Revenue</div>
+                            </div>
+                            <div class="dashboard-stats">
+                                <div class="stat-number" id="orderCount">0</div>
+                                <div class="stat-label">Total Orders</div>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+
+            <!-- ADD PRODUCT SECTION -->
+            <div id="addProductSection" style="display:none;">
+                <table width="100%" border="1" cellpadding="10" cellspacing="0" bordercolor="#CCCCCC">
+                    <tr bgcolor="#3366CC">
+                        <td colspan="2">
+                            <font color="#FFFFFF" size="3"><b>📦 Add / Edit Product</b></font>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="2">
+                            <form id="productForm">
+                                <table width="100%" border="0" cellpadding="5" cellspacing="0">
+                                    <tr>
+                                        <td width="150"><b>Product Name:</b></td>
+                                        <td><input type="text" id="productName" name="productName" size="60" required /></td>
+                                    </tr>
+                                    <tr>
+                                        <td valign="top"><b>Description:</b></td>
+                                        <td><textarea id="productDescription" name="productDescription" rows="4" cols="58"></textarea></td>
+                                    </tr>
+                                    <tr>
+                                        <td><b>Price ($):</b></td>
+                                        <td><input type="number" id="productPrice" name="productPrice" step="0.01" min="0" required /></td>
+                                    </tr>
+                                    <tr>
+                                        <td><b>Category:</b></td>
+                                        <td>
+                                            <select id="productCategory" name="productCategory">
+                                                <option>Electronics</option>
+                                            </select>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><b>Condition:</b></td>
+                                        <td>
+                                            <select id="productCondition" name="productCondition">
+                                                <option value="new">New</option>
+                                                <option value="used">Used</option>
+                                                <option value="refurbished">Refurbished</option>
+                                            </select>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><b>Stock Quantity:</b></td>
+                                        <td><input type="number" id="productStock" name="productStock" value="1" min="0" required /></td>
+                                    </tr>
+                                    <tr>
+                                        <td valign="top"><b>Product Images:</b></td>
+                                        <td>
+                                            <div class="image-upload-zone" onclick="document.getElementById('imageUpload').click()">
+                                                <b>📷 Click to Upload Images</b><br />
+                                                <font size="2">JPG, PNG (will be compressed)</font>
+                                            </div>
+                                            <input type="file" id="imageUpload" accept="image/*" multiple style="display:none;" onchange="handleImageSelect(event)" />
+                                            <br /><br />
+                                            <div id="imagePreviewContainer">
+                                                <p>No images uploaded yet</p>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>&nbsp;</td>
+                                        <td>
+                                            <input type="button" value="💾 Save as Draft" onclick="saveProduct(event, false)" style="padding:8px 15px; font-weight:bold;" />
+                                            &nbsp;&nbsp;
+                                            <input type="button" value="✅ Save & Publish" onclick="saveProduct(event, true)" style="padding:8px 15px; font-weight:bold; background:#00CC00; color:#fff;" />
+                                            &nbsp;&nbsp;
+                                            <input type="button" value="Clear Form" onclick="clearProductForm()" />
+                                        </td>
+                                    </tr>
+                                </table>
+                            </form>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+
+            <!-- DRAFT PRODUCTS SECTION -->
+            <div id="draftProductsSection" style="display:none;">
+                <table width="100%" border="1" cellpadding="10" cellspacing="0" bordercolor="#CCCCCC">
+                    <tr bgcolor="#F0F0F0">
+                        <td colspan="7">
+                            <font size="3"><b>📝 Draft Products</b></font>
+                        </td>
+                    </tr>
+                    <tr bgcolor="#E0E0E0">
+                        <td><b>Image</b></td>
+                        <td><b>Name</b></td>
+                        <td><b>Category</b></td>
+                        <td><b>Price</b></td>
+                        <td><b>Stock</b></td>
+                        <td><b>Condition</b></td>
+                        <td><b>Actions</b></td>
+                    </tr>
+                    <tbody id="draftProductsList">
+                        <tr><td colspan="7" align="center"><i>No draft products</i></td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- PUBLISHED PRODUCTS SECTION -->
+            <div id="publishedProductsSection" style="display:none;">
+                <table width="100%" border="1" cellpadding="10" cellspacing="0" bordercolor="#CCCCCC">
+                    <tr bgcolor="#F0F0F0">
+                        <td colspan="7">
+                            <font size="3"><b>🌟 Published Products</b></font>
+                        </td>
+                    </tr>
+                    <tr bgcolor="#E0E0E0">
+                        <td><b>Image</b></td>
+                        <td><b>Name</b></td>
+                        <td><b>Category</b></td>
+                        <td><b>Price</b></td>
+                        <td><b>Stock</b></td>
+                        <td><b>Condition</b></td>
+                        <td><b>Actions</b></td>
+                    </tr>
+                    <tbody id="publishedProductsList">
+                        <tr><td colspan="7" align="center"><i>No published products</i></td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- CATEGORIES SECTION -->
+            <div id="categoriesSection" style="display:none;">
+                <table width="100%" border="1" cellpadding="10" cellspacing="0" bordercolor="#CCCCCC">
+                    <tr bgcolor="#3366CC">
+                        <td colspan="2">
+                            <font color="#FFFFFF" size="3"><b>🏷️ Add / Edit Category</b></font>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="2">
+                            <form id="categoryForm" onsubmit="saveCategory(event)">
+                                <table width="100%" border="0" cellpadding="5" cellspacing="0">
+                                    <tr>
+                                        <td width="150"><b>Category ID:</b></td>
+                                        <td><input type="text" id="categoryId" name="categoryId" size="10" readonly style="background-color:#F0F0F0;" /></td>
+                                    </tr>
+                                    <tr>
+                                        <td><b>Category Name:</b></td>
+                                        <td><input type="text" id="categoryName" name="categoryName" size="40" required /></td>
+                                    </tr>
+                                    <tr>
+                                        <td>&nbsp;</td>
+                                        <td>
+                                            <input type="submit" value="Add Category" />
+                                            <input type="button" value="Clear" onclick="document.getElementById('categoryForm').reset(); document.getElementById('categoryId').value = '';" />
+                                        </td>
+                                    </tr>
+                                </table>
+                            </form>
+                        </td>
+                    </tr>
+                </table>
+
+                <br />
+
+                <table width="100%" border="1" cellpadding="10" cellspacing="0" bordercolor="#CCCCCC">
+                    <tr bgcolor="#F0F0F0">
+                        <td colspan="3"><b>Current Categories</b></td>
+                    </tr>
+                    <tr bgcolor="#E0E0E0">
+                        <td><b>ID</b></td>
+                        <td><b>Name</b></td>
+                        <td><b>Actions</b></td>
+                    </tr>
+                    <tbody id="categoriesList">
+                        <!-- Categories loaded here -->
+                    </tbody>
+                </table>
+            </div>
+
+        </td>
+    </tr>
+</table>
+
+<!-- Footer -->
+<table width="100%" border="0" cellpadding="0" cellspacing="0" bgcolor="#F0F0F0">
+    <tr>
+        <td height="60">
+            <table width="980" border="0" align="center" cellpadding="10" cellspacing="0">
+                <tr>
+                    <td align="center">
+                        <font size="1">
+                        TRASHEDGOODS.STORE Marketplace Manager - 2008 Style<br />
+                        Product images uploaded to GitHub repository
+                        </font>
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+</table>
+
+</body>
+</html>
