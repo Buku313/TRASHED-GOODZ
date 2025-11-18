@@ -1,6 +1,40 @@
 // TRASHEDGOODS.STORE Admin Panel JavaScript
 // Using localStorage for data persistence
 
+// Load data from data.json file
+function loadDataFromFile() {
+    fetch('data.json')
+        .then(function(response) {
+            if (response.ok) {
+                return response.json();
+            }
+            throw new Error('No data.json file found');
+        })
+        .then(function(data) {
+            // Save to localStorage for admin editing
+            if (data.items) {
+                localStorage.setItem('tgs_items', JSON.stringify(data.items));
+            }
+            if (data.categories) {
+                localStorage.setItem('tgs_categories', JSON.stringify(data.categories));
+            }
+            if (data.hotCategories) {
+                localStorage.setItem('tgs_hotCategories', JSON.stringify(data.hotCategories));
+            }
+            // Load the admin UI
+            loadItems();
+            loadCategories();
+            loadHotCategories();
+        })
+        .catch(function(error) {
+            // If no data.json, initialize with defaults
+            initializeData();
+            loadItems();
+            loadCategories();
+            loadHotCategories();
+        });
+}
+
 // Initialize default data
 function initializeData() {
     if (!localStorage.getItem('tgs_items')) {
@@ -138,10 +172,7 @@ function initializeData() {
 
 // Load admin data on page load
 function loadAdminData() {
-    initializeData();
-    loadItems();
-    loadCategories();
-    loadHotCategories();
+    loadDataFromFile();
 }
 
 // Tab switching
@@ -460,7 +491,7 @@ function exportData() {
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
 
-    alert('Data exported successfully! Save this file as "data.json" in your repository root and commit it to GitHub.');
+    alert('Data exported successfully!\n\nIMPORTANT: To make changes visible to everyone:\n1. Save the downloaded file as "data.json"\n2. Replace the existing data.json in your repository\n3. Commit and push to GitHub\n\nWithout these steps, only you will see the changes in this browser.');
 }
 
 // Import data from JSON file

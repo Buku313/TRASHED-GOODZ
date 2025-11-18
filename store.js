@@ -136,9 +136,16 @@ function initializeData() {
     }
 }
 
+// Store loaded data globally
+var storeData = {
+    items: [],
+    categories: [],
+    hotCategories: []
+};
+
 // Main function to load all store data
 function loadStoreData() {
-    // Try to load from data.json first (for GitHub Pages)
+    // Load from data.json (everyone sees this)
     fetch('data.json')
         .then(function(response) {
             if (response.ok) {
@@ -147,33 +154,23 @@ function loadStoreData() {
             throw new Error('No data.json file found');
         })
         .then(function(data) {
-            // Save fetched data to localStorage
-            if (data.items) {
-                localStorage.setItem('tgs_items', JSON.stringify(data.items));
-            }
-            if (data.categories) {
-                localStorage.setItem('tgs_categories', JSON.stringify(data.categories));
-            }
-            if (data.hotCategories) {
-                localStorage.setItem('tgs_hotCategories', JSON.stringify(data.hotCategories));
-            }
+            // Store in global variable
+            storeData = data;
             // Load the UI
             loadCategories();
             loadHotCategories();
             loadFeaturedItems();
         })
         .catch(function(error) {
-            // Fallback to localStorage or initialize defaults
-            initializeData();
-            loadCategories();
-            loadHotCategories();
-            loadFeaturedItems();
+            // If no data.json, show error message
+            console.error('Failed to load data.json:', error);
+            alert('Error: Could not load store data. Please make sure data.json exists.');
         });
 }
 
 // Load sidebar categories
 function loadCategories() {
-    var categories = JSON.parse(localStorage.getItem('tgs_categories')) || [];
+    var categories = storeData.categories || [];
     var html = '';
 
     for (var i = 0; i < categories.length; i++) {
@@ -190,7 +187,7 @@ function loadCategories() {
 
 // Load hot categories grid
 function loadHotCategories() {
-    var hotCategories = JSON.parse(localStorage.getItem('tgs_hotCategories')) || [];
+    var hotCategories = storeData.hotCategories || [];
     var html = '';
 
     // Calculate width percentage based on number of categories
@@ -213,7 +210,7 @@ function loadHotCategories() {
 
 // Load featured items
 function loadFeaturedItems() {
-    var items = JSON.parse(localStorage.getItem('tgs_items')) || [];
+    var items = storeData.items || [];
     var html = '';
 
     // Display items in rows of 3

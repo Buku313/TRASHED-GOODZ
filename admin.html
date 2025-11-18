@@ -80,14 +80,19 @@
         <td valign="top">
 
             <!-- Data Export/Import -->
-            <table width="100%" border="1" cellpadding="10" cellspacing="0" bordercolor="#CCCCCC" bgcolor="#FFFFEE">
+            <table width="100%" border="1" cellpadding="10" cellspacing="0" bordercolor="#CCCCCC" bgcolor="#FFE6E6">
                 <tr>
-                    <td align="center">
+                    <td>
                         <font size="2">
-                        <b>Save Data for GitHub Pages:</b>
-                        <input type="button" value="Export Data to File" onclick="exportData()" />
-                        &nbsp;&nbsp;|&nbsp;&nbsp;
-                        <b>Load Data:</b>
+                        <b>IMPORTANT: Changes are ONLY saved locally in your browser!</b><br />
+                        To make products visible to everyone visiting the site:<br />
+                        1. Make your changes below<br />
+                        2. Click <input type="button" value="Export Data to File" onclick="exportData()" style="font-weight:bold;" /><br />
+                        3. Save the downloaded file as <b>data.json</b><br />
+                        4. Replace the data.json file in your GitHub repository<br />
+                        5. Commit and push to GitHub<br />
+                        <br />
+                        <b>Load existing data:</b>
                         <input type="file" id="importFile" accept=".json" onchange="importData()" />
                         </font>
                     </td>
