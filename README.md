@@ -14,35 +14,42 @@ Visit the store at: https://buku313.github.io/TRASHED-GOODZ/
 - Username: `admin`
 - Password: `trashedgoods2008`
 
-## How to Update Products (For Everyone to See)
+## 🚀 Auto-Save Feature (Seamless Experience)
 
-Products are stored in `data.json` which is loaded by all visitors. To update products visible to everyone:
+**NEW!** Changes now automatically save to GitHub and go live in 1-2 minutes!
 
-### Step 1: Login to Admin Panel
-1. Go to the login page (or click "Admin" in the header)
-2. Enter credentials (admin/trashedgoods2008)
+### Setup Auto-Save (One-Time Configuration)
 
-### Step 2: Make Your Changes
-- Add/edit/delete items in the "Manage Items" tab
-- Customize categories in "Manage Categories" tab
-- Update featured categories in "Hot Categories" tab
+1. **Create GitHub Token:** https://github.com/settings/tokens
+   - Click "Generate new token (classic)"
+   - Enable "repo" permission
+   - Copy the token
 
-### Step 3: Export Your Changes
-1. Click **"Export Data to File"** button
-2. Save the downloaded file as `store-data.json`
-
-### Step 4: Update GitHub Repository
-1. Rename `store-data.json` to `data.json`
-2. Replace the existing `data.json` in your repository
-3. Commit and push:
-   ```bash
-   git add data.json
-   git commit -m "Update store products"
-   git push
+2. **Configure:** Edit `github-config.js` and paste your token:
+   ```javascript
+   token: 'ghp_your_token_here'
    ```
 
-### Step 5: Wait for GitHub Pages to Deploy
-GitHub Pages will automatically rebuild your site (usually takes 1-2 minutes). Your changes will then be visible to everyone!
+3. **Commit:** `git add github-config.js && git commit -m "Enable auto-save" && git push`
+
+4. **Done!** Now when you add/edit/delete items, they automatically save to GitHub!
+
+**See [SETUP_AUTO_SAVE.md](SETUP_AUTO_SAVE.md) for detailed instructions.**
+
+## How to Update Products
+
+### With Auto-Save (Recommended)
+1. Login to admin panel
+2. Make your changes (add/edit/delete items, categories, etc.)
+3. Wait 2 seconds - you'll see "✓ Saved to GitHub!"
+4. Done! Changes go live in 1-2 minutes
+
+### Manual Method (If Auto-Save Not Configured)
+1. Login to admin panel
+2. Make your changes
+3. Click "Export Data to File"
+4. Save as `data.json` and replace the file in your repo
+5. Commit and push to GitHub
 
 ## Important Notes
 

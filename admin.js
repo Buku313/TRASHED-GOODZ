@@ -261,6 +261,15 @@ function saveItem(event) {
     clearItemForm();
     loadItems();
     alert('Item saved successfully!');
+
+    // Auto-save to GitHub
+    showSavingIndicator();
+    if (window.autoSaveTimeout) clearTimeout(window.autoSaveTimeout);
+    window.autoSaveTimeout = setTimeout(function() {
+        saveToGitHub(function(success) {
+            hideSavingIndicator(success);
+        });
+    }, 2000);
 }
 
 function editItem(id) {
@@ -289,6 +298,15 @@ function deleteItem(id) {
         localStorage.setItem('tgs_items', JSON.stringify(items));
         loadItems();
         alert('Item deleted successfully!');
+
+        // Auto-save to GitHub
+        showSavingIndicator();
+        if (window.autoSaveTimeout) clearTimeout(window.autoSaveTimeout);
+        window.autoSaveTimeout = setTimeout(function() {
+            saveToGitHub(function(success) {
+                hideSavingIndicator(success);
+            });
+        }, 2000);
     }
 }
 
@@ -345,6 +363,15 @@ function saveCategory(event) {
     clearCategoryForm();
     loadCategories();
     alert('Category saved successfully!');
+
+    // Auto-save to GitHub
+    showSavingIndicator();
+    if (window.autoSaveTimeout) clearTimeout(window.autoSaveTimeout);
+    window.autoSaveTimeout = setTimeout(function() {
+        saveToGitHub(function(success) {
+            hideSavingIndicator(success);
+        });
+    }, 2000);
 }
 
 function editCategory(id) {
@@ -369,6 +396,15 @@ function deleteCategory(id) {
         localStorage.setItem('tgs_categories', JSON.stringify(categories));
         loadCategories();
         alert('Category deleted successfully!');
+
+        // Auto-save to GitHub
+        showSavingIndicator();
+        if (window.autoSaveTimeout) clearTimeout(window.autoSaveTimeout);
+        window.autoSaveTimeout = setTimeout(function() {
+            saveToGitHub(function(success) {
+                hideSavingIndicator(success);
+            });
+        }, 2000);
     }
 }
 
@@ -428,6 +464,15 @@ function saveHotCategory(event) {
     clearHotCategoryForm();
     loadHotCategories();
     alert('Hot Category saved successfully!');
+
+    // Auto-save to GitHub
+    showSavingIndicator();
+    if (window.autoSaveTimeout) clearTimeout(window.autoSaveTimeout);
+    window.autoSaveTimeout = setTimeout(function() {
+        saveToGitHub(function(success) {
+            hideSavingIndicator(success);
+        });
+    }, 2000);
 }
 
 function editHotCategory(id) {
@@ -454,6 +499,15 @@ function deleteHotCategory(id) {
         localStorage.setItem('tgs_hotCategories', JSON.stringify(hotCategories));
         loadHotCategories();
         alert('Hot Category deleted successfully!');
+
+        // Auto-save to GitHub
+        showSavingIndicator();
+        if (window.autoSaveTimeout) clearTimeout(window.autoSaveTimeout);
+        window.autoSaveTimeout = setTimeout(function() {
+            saveToGitHub(function(success) {
+                hideSavingIndicator(success);
+            });
+        }, 2000);
     }
 }
 

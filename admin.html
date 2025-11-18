@@ -4,6 +4,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <title>TRASHEDGOODS.STORE - Admin Panel</title>
     <link rel="stylesheet" type="text/css" href="style.css" />
+    <script type="text/javascript" src="github-config.js"></script>
+    <script type="text/javascript" src="github-api.js"></script>
     <script type="text/javascript" src="admin.js"></script>
     <script type="text/javascript">
         // Check authentication on page load
@@ -79,20 +81,34 @@
     <tr>
         <td valign="top">
 
-            <!-- Data Export/Import -->
-            <table width="100%" border="1" cellpadding="10" cellspacing="0" bordercolor="#CCCCCC" bgcolor="#FFE6E6">
+            <!-- Auto-Save Status -->
+            <table width="100%" border="1" cellpadding="10" cellspacing="0" bordercolor="#CCCCCC" bgcolor="#E6F7FF">
                 <tr>
-                    <td>
+                    <td align="center">
+                        <font size="3">
+                        <b>🚀 SEAMLESS AUTO-SAVE ENABLED</b><br />
+                        </font>
                         <font size="2">
-                        <b>IMPORTANT: Changes are ONLY saved locally in your browser!</b><br />
-                        To make products visible to everyone visiting the site:<br />
-                        1. Make your changes below<br />
-                        2. Click <input type="button" value="Export Data to File" onclick="exportData()" style="font-weight:bold;" /><br />
-                        3. Save the downloaded file as <b>data.json</b><br />
-                        4. Replace the data.json file in your GitHub repository<br />
-                        5. Commit and push to GitHub<br />
-                        <br />
-                        <b>Load existing data:</b>
+                        Changes automatically save to GitHub and go live in 1-2 minutes!<br />
+                        <span id="savingIndicator"></span>
+                        </font>
+                    </td>
+                </tr>
+            </table>
+
+            <br />
+
+            <!-- Manual Options -->
+            <table width="100%" border="1" cellpadding="10" cellspacing="0" bordercolor="#CCCCCC" bgcolor="#F5F5F5">
+                <tr>
+                    <td align="center">
+                        <font size="2">
+                        <b>Manual Options:</b>
+                        <input type="button" value="💾 Save to GitHub Now" onclick="saveToGitHub()" style="font-weight:bold; padding:5px 10px;" />
+                        &nbsp;&nbsp;|&nbsp;&nbsp;
+                        <input type="button" value="Export Data to File" onclick="exportData()" />
+                        &nbsp;&nbsp;|&nbsp;&nbsp;
+                        <b>Import:</b>
                         <input type="file" id="importFile" accept=".json" onchange="importData()" />
                         </font>
                     </td>
