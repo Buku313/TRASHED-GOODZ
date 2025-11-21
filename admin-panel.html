@@ -4,8 +4,8 @@
     <meta charset="utf-8">
     <title>TRASHEDGOODS.STORE - Admin Panel</title>
     <link rel="stylesheet" type="text/css" href="style.css" />
-    <script src="db-config.js"></script>
-    <script src="db-api.js"></script>
+    <script src="db-config.js?v=2"></script>
+    <script src="db-api.js?v=2"></script>
     <style>
         .admin-container {
             max-width: 1200px;
@@ -58,32 +58,93 @@
             text-align: center;
             cursor: pointer;
             background: white;
+            transition: all 0.3s ease;
         }
         .image-upload:hover {
             border-color: #3366CC;
             background: #f0f0ff;
         }
+        .image-upload.drag-over {
+            border-color: #28a745;
+            background: #e8f5e9;
+            transform: scale(1.02);
+        }
+        .image-upload.uploading {
+            border-color: #ffc107;
+            background: #fff8e1;
+        }
         .image-preview {
             display: inline-block;
             margin: 10px;
             position: relative;
+            cursor: move;
         }
         .image-preview img {
             max-width: 150px;
             max-height: 150px;
-            border: 1px solid #ddd;
+            border: 2px solid #ddd;
+            border-radius: 4px;
+        }
+        .image-preview:hover img {
+            border-color: #3366CC;
         }
         .image-preview button {
             position: absolute;
             top: -10px;
             right: -10px;
-            background: red;
+            background: #dc3545;
             color: white;
             border: none;
             border-radius: 50%;
-            width: 25px;
-            height: 25px;
+            width: 30px;
+            height: 30px;
             cursor: pointer;
+            font-size: 18px;
+            line-height: 1;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+        .image-preview button:hover {
+            background: #c82333;
+        }
+        .image-preview .primary-badge {
+            position: absolute;
+            top: -10px;
+            left: -10px;
+            background: #28a745;
+            color: white;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+        .upload-progress {
+            margin-top: 10px;
+            font-size: 14px;
+            color: #666;
+        }
+        .progress-bar {
+            width: 100%;
+            height: 20px;
+            background: #f0f0f0;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            overflow: hidden;
+            margin: 10px 0;
+        }
+        .progress-fill {
+            height: 100%;
+            background: #3366CC;
+            transition: width 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 12px;
+            font-weight: bold;
         }
         .btn {
             padding: 10px 20px;
@@ -349,11 +410,20 @@
 
             <div class="form-group">
                 <label>Images</label>
-                <div class="image-upload" onclick="document.getElementById('imageInput').click()">
-                    <div id="uploadText">📷 Click to upload images<br><small>JPG or PNG</small></div>
+                <div class="image-upload" id="imageUploadZone" onclick="triggerImageSelect()">
+                    <div id="uploadText">📷 Click or drag images here<br><small>JPG or PNG, max 10MB each</small></div>
+                    <div id="uploadProgress" class="upload-progress" style="display: none;">
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="progressFill">0%</div>
+                        </div>
+                        <div id="progressText"></div>
+                    </div>
                     <div id="imagePreviews"></div>
                 </div>
-                <input type="file" id="imageInput" accept="image/*" multiple style="display: none;" onchange="handleImageSelect(event)">
+                <input type="file" id="imageInput" accept="image/*" multiple capture="environment" style="display: none;" onchange="handleImageSelect(event)">
+                <div style="margin-top: 8px; font-size: 12px; color: #666;">
+                    <b>Tip:</b> First image will be the main product image. Drag to reorder.
+                </div>
             </div>
 
             <div style="margin-top: 20px;">
@@ -443,15 +513,19 @@ function showSettings() {
     const apiKey = getAPIKey() || '';
     const binId = getBinId() || 'Not created yet';
     const imgbbKey = localStorage.getItem('tgs_imgbb_api_key') || '';
+    const cloudinaryName = localStorage.getItem('tgs_cloudinary_cloud_name') || '';
+    const cloudinaryPreset = localStorage.getItem('tgs_cloudinary_upload_preset') || '';
 
     let settingsMsg = '=== SETTINGS ===\n\n';
     settingsMsg += '1. Update JSONBin API Key\n';
-    settingsMsg += '2. Update imgbb API Key (for image uploads)\n';
-    settingsMsg += '3. Change Admin Password\n';
-    settingsMsg += '4. View Bin ID\n';
-    settingsMsg += '5. Cancel\n\n';
+    settingsMsg += '2. Update imgbb API Key (image hosting option 1)\n';
+    settingsMsg += '3. Update Cloudinary Config (image hosting option 2)\n';
+    settingsMsg += '4. View Image Upload Status\n';
+    settingsMsg += '5. Change Admin Password\n';
+    settingsMsg += '6. View Bin ID\n';
+    settingsMsg += '7. Cancel\n\n';
 
-    const choice = prompt(settingsMsg + 'Enter option (1-5):');
+    const choice = prompt(settingsMsg + 'Enter option (1-7):');
 
     if (choice === '1') {
         const newApiKey = prompt('Enter new JSONBin API Key:', apiKey);
@@ -467,13 +541,41 @@ function showSettings() {
             alert('✅ imgbb API key saved! You can now upload images.');
         }
     } else if (choice === '3') {
+        const msg1 = 'To setup Cloudinary (alternative to imgbb):\n\n1. Go to https://cloudinary.com/users/register_free\n2. Sign up (free)\n3. Go to Dashboard\n4. Copy your Cloud Name\n\nEnter your Cloudinary Cloud Name:';
+        const newCloudName = prompt(msg1, cloudinaryName);
+        if (newCloudName && newCloudName.trim()) {
+            localStorage.setItem('tgs_cloudinary_cloud_name', newCloudName.trim());
+
+            const msg2 = 'Now create an Upload Preset:\n\n1. Go to Settings → Upload\n2. Scroll to "Upload presets"\n3. Click "Add upload preset"\n4. Set Signing Mode to "Unsigned"\n5. Save and copy the preset name\n\nEnter your Upload Preset name:';
+            const newPreset = prompt(msg2, cloudinaryPreset);
+            if (newPreset && newPreset.trim()) {
+                localStorage.setItem('tgs_cloudinary_upload_preset', newPreset.trim());
+                alert('✅ Cloudinary configured! You can now upload images.');
+            }
+        }
+    } else if (choice === '4') {
+        let status = '=== IMAGE UPLOAD STATUS ===\n\n';
+        if (imgbbKey) {
+            status += '✅ imgbb: Configured (Primary)\n';
+        } else {
+            status += '❌ imgbb: Not configured\n';
+        }
+        if (cloudinaryName && cloudinaryPreset) {
+            status += '✅ Cloudinary: Configured (Fallback)\n';
+        } else {
+            status += '❌ Cloudinary: Not configured\n';
+        }
+        status += '\n📝 Base64 embedding: Always available (for images < 500KB)\n';
+        status += '\n💡 Tip: Configure at least one hosting service for best experience!';
+        alert(status);
+    } else if (choice === '5') {
         const newPassword = prompt('Enter new admin password:');
         if (newPassword && newPassword.trim()) {
             setAdminPassword(newPassword.trim());
             alert('✅ Password updated! Please re-login.');
             logout();
         }
-    } else if (choice === '4') {
+    } else if (choice === '6') {
         alert('Your Bin ID:\n\n' + (binId || 'Not created yet - will be created on first save'));
     }
 }
@@ -564,67 +666,254 @@ function displayProducts() {
     container.innerHTML = html;
 }
 
+// Trigger file input
+function triggerImageSelect() {
+    document.getElementById('imageInput').click();
+}
+
+// Setup drag and drop
+window.addEventListener('DOMContentLoaded', function() {
+    const uploadZone = document.getElementById('imageUploadZone');
+    if (!uploadZone) return;
+
+    // Prevent default drag behaviors
+    ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+        uploadZone.addEventListener(eventName, preventDefaults, false);
+        document.body.addEventListener(eventName, preventDefaults, false);
+    });
+
+    // Highlight drop zone when item is dragged over it
+    ['dragenter', 'dragover'].forEach(eventName => {
+        uploadZone.addEventListener(eventName, () => {
+            uploadZone.classList.add('drag-over');
+        }, false);
+    });
+
+    ['dragleave', 'drop'].forEach(eventName => {
+        uploadZone.addEventListener(eventName, () => {
+            uploadZone.classList.remove('drag-over');
+        }, false);
+    });
+
+    // Handle dropped files
+    uploadZone.addEventListener('drop', handleDrop, false);
+});
+
+function preventDefaults(e) {
+    e.preventDefault();
+    e.stopPropagation();
+}
+
+function handleDrop(e) {
+    const dt = e.dataTransfer;
+    const files = dt.files;
+    handleImageFiles(files);
+}
+
 async function handleImageSelect(event) {
     const files = event.target.files;
-    const previews = document.getElementById('imagePreviews');
+    await handleImageFiles(files);
+    event.target.value = ''; // Reset for re-upload
+}
+
+async function handleImageFiles(files) {
+    if (files.length === 0) return;
+
+    const uploadZone = document.getElementById('imageUploadZone');
     const uploadText = document.getElementById('uploadText');
+    const progressContainer = document.getElementById('uploadProgress');
+    const progressFill = document.getElementById('progressFill');
+    const progressText = document.getElementById('progressText');
 
-    uploadText.textContent = 'Uploading...';
+    // Show progress UI
+    uploadZone.classList.add('uploading');
+    uploadText.style.display = 'none';
+    progressContainer.style.display = 'block';
 
-    try {
-        for (let file of files) {
+    let successCount = 0;
+    let failCount = 0;
+    const totalFiles = files.length;
+
+    for (let i = 0; i < totalFiles; i++) {
+        const file = files[i];
+        const progress = Math.round(((i + 1) / totalFiles) * 100);
+
+        try {
+            // Validate file type
+            if (!file.type.startsWith('image/')) {
+                throw new Error(`${file.name} is not an image file`);
+            }
+
+            // Validate file size (max 10MB)
+            if (file.size > 10 * 1024 * 1024) {
+                throw new Error(`${file.name} is too large (max 10MB)`);
+            }
+
+            // Update progress
+            progressFill.style.width = progress + '%';
+            progressFill.textContent = progress + '%';
+            progressText.textContent = `Processing ${file.name}... (${i + 1}/${totalFiles})`;
+
             // Compress image
-            showMessage('Compressing image...', 'info');
-            const compressed = await window.db.compressImage(file);
+            const compressed = await window.db.compressImage(file, 1200, 0.85);
 
-            // Upload to Imgur
-            showMessage('Uploading image...', 'info');
+            // Upload with fallback system
+            progressText.textContent = `Uploading ${file.name}... (${i + 1}/${totalFiles})`;
             const imageUrl = await window.db.uploadImage(compressed);
 
             selectedImages.push(imageUrl);
+            successCount++;
 
-            // Show preview
-            const previewDiv = document.createElement('div');
-            previewDiv.className = 'image-preview';
-            previewDiv.innerHTML = `
-                <img src="${imageUrl}" alt="Preview">
-                <button onclick="removeImage('${imageUrl}'); event.stopPropagation(); return false;">×</button>
-            `;
-            previews.appendChild(previewDiv);
+            // Add to preview
+            addImagePreview(imageUrl);
+
+        } catch (error) {
+            console.error(`Failed to upload ${file.name}:`, error);
+            failCount++;
+
+            // If it's a configuration error, show it prominently and stop
+            if (error.message.includes('configure')) {
+                uploadText.textContent = '⚠️ Image hosting not configured';
+                uploadText.style.display = 'block';
+                progressContainer.style.display = 'none';
+                uploadZone.classList.remove('uploading');
+                alert(error.message);
+                return;
+            }
         }
-
-        uploadText.textContent = '✅ Images uploaded! Click to add more';
-        showMessage(`${files.length} image(s) uploaded successfully!`, 'success');
-    } catch (error) {
-        uploadText.textContent = '❌ Upload failed. Try again?';
-        showMessage('Error uploading image: ' + error.message, 'error');
     }
+
+    // Hide progress and show results
+    uploadZone.classList.remove('uploading');
+    progressContainer.style.display = 'none';
+    uploadText.style.display = 'block';
+
+    if (successCount > 0) {
+        uploadText.innerHTML = `✅ ${successCount} image(s) uploaded!<br><small>Click or drag to add more</small>`;
+        showMessage(`Successfully uploaded ${successCount} image(s)!`, 'success');
+    }
+
+    if (failCount > 0) {
+        showMessage(`${failCount} image(s) failed to upload. Check console for details.`, 'error');
+    }
+
+    updateImagePreviews();
+}
+
+function addImagePreview(url) {
+    const previews = document.getElementById('imagePreviews');
+    const index = selectedImages.length - 1;
+
+    const previewDiv = document.createElement('div');
+    previewDiv.className = 'image-preview';
+    previewDiv.draggable = true;
+    previewDiv.dataset.url = url;
+    previewDiv.dataset.index = index;
+
+    previewDiv.innerHTML = `
+        ${index === 0 ? '<div class="primary-badge">★</div>' : ''}
+        <img src="${url}" alt="Preview ${index + 1}" loading="lazy">
+        <button onclick="removeImage('${url}'); event.stopPropagation(); return false;" title="Remove image">×</button>
+    `;
+
+    // Add drag event listeners for reordering
+    previewDiv.addEventListener('dragstart', handleDragStart);
+    previewDiv.addEventListener('dragover', handleDragOver);
+    previewDiv.addEventListener('drop', handleImageDrop);
+    previewDiv.addEventListener('dragend', handleDragEnd);
+
+    previews.appendChild(previewDiv);
+}
+
+// Drag and drop for reordering images
+let draggedElement = null;
+
+function handleDragStart(e) {
+    draggedElement = this;
+    this.style.opacity = '0.5';
+    e.dataTransfer.effectAllowed = 'move';
+}
+
+function handleDragOver(e) {
+    if (e.preventDefault) {
+        e.preventDefault();
+    }
+    e.dataTransfer.dropEffect = 'move';
+    return false;
+}
+
+function handleImageDrop(e) {
+    if (e.stopPropagation) {
+        e.stopPropagation();
+    }
+
+    if (draggedElement !== this) {
+        // Get the URLs
+        const draggedUrl = draggedElement.dataset.url;
+        const targetUrl = this.dataset.url;
+
+        // Find indices in array
+        const draggedIndex = selectedImages.indexOf(draggedUrl);
+        const targetIndex = selectedImages.indexOf(targetUrl);
+
+        // Swap in array
+        selectedImages.splice(draggedIndex, 1);
+        selectedImages.splice(targetIndex, 0, draggedUrl);
+
+        // Rebuild previews
+        updateImagePreviews();
+    }
+
+    return false;
+}
+
+function handleDragEnd(e) {
+    this.style.opacity = '1';
+    draggedElement = null;
 }
 
 function removeImage(url) {
     selectedImages = selectedImages.filter(img => img !== url);
-    displayImagePreviews();
+    updateImagePreviews();
 }
 
-function displayImagePreviews() {
+function updateImagePreviews() {
     const previews = document.getElementById('imagePreviews');
+    const uploadText = document.getElementById('uploadText');
     previews.innerHTML = '';
 
-    selectedImages.forEach(url => {
+    selectedImages.forEach((url, index) => {
         const previewDiv = document.createElement('div');
         previewDiv.className = 'image-preview';
+        previewDiv.draggable = true;
+        previewDiv.dataset.url = url;
+        previewDiv.dataset.index = index;
+
         previewDiv.innerHTML = `
-            <img src="${url}" alt="Preview">
-            <button onclick="removeImage('${url}'); event.stopPropagation(); return false;">×</button>
+            ${index === 0 ? '<div class="primary-badge" title="Main product image">★</div>' : ''}
+            <img src="${url}" alt="Preview ${index + 1}" loading="lazy">
+            <button onclick="removeImage('${url}'); event.stopPropagation(); return false;" title="Remove image">×</button>
         `;
+
+        // Add drag event listeners for reordering
+        previewDiv.addEventListener('dragstart', handleDragStart);
+        previewDiv.addEventListener('dragover', handleDragOver);
+        previewDiv.addEventListener('drop', handleImageDrop);
+        previewDiv.addEventListener('dragend', handleDragEnd);
+
         previews.appendChild(previewDiv);
     });
 
+    // Update upload text
     if (selectedImages.length > 0) {
-        document.getElementById('uploadText').textContent = `${selectedImages.length} image(s) - Click to add more`;
+        uploadText.innerHTML = `${selectedImages.length} image(s) uploaded<br><small>Click or drag to add more</small>`;
     } else {
-        document.getElementById('uploadText').textContent = '📷 Click to upload images<br><small>JPG or PNG</small>';
+        uploadText.innerHTML = '📷 Click or drag images here<br><small>JPG or PNG, max 10MB each</small>';
     }
+}
+
+function displayImagePreviews() {
+    updateImagePreviews();
 }
 
 async function saveProduct(status = 'draft') {
@@ -691,9 +980,9 @@ function editProduct(id) {
     document.getElementById('productStock').value = product.stock;
 
     selectedImages = product.images || [];
-    displayImagePreviews();
+    updateImagePreviews();
 
-    window.scrollTo(0, 0);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
     showMessage('Editing product. Make changes and click Save.', 'info');
 }
 
@@ -754,7 +1043,8 @@ function clearForm() {
     document.getElementById('productCondition').value = 'used';
     document.getElementById('productStock').value = '1';
     selectedImages = [];
-    displayImagePreviews();
+    updateImagePreviews();
+    clearMessage();
 }
 
 function showMessage(text, type = 'info') {

@@ -1,0 +1,426 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Product Details - TRASHEDGOODS.STORE</title>
+    <link rel="stylesheet" type="text/css" href="style.css" />
+    <script type="text/javascript" src="db-config.js"></script>
+    <script type="text/javascript" src="db-api.js"></script>
+    <style>
+        .product-gallery {
+            text-align: center;
+            margin: 20px 0;
+        }
+        .main-image {
+            max-width: 400px;
+            max-height: 400px;
+            border: 2px solid #CCCCCC;
+            margin-bottom: 10px;
+        }
+        .thumbnail-container {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        .thumbnail {
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+            border: 2px solid #CCCCCC;
+            cursor: pointer;
+        }
+        .thumbnail:hover,
+        .thumbnail.active {
+            border-color: #3366CC;
+        }
+        .price-box {
+            background: #FFFFCC;
+            padding: 15px;
+            border: 2px solid #FFCC00;
+            margin: 15px 0;
+        }
+        .buy-button {
+            background: #FFCC00;
+            color: #000;
+            padding: 12px 30px;
+            font-size: 16px;
+            font-weight: bold;
+            border: 2px solid #CC9900;
+            cursor: pointer;
+            width: 100%;
+        }
+        .buy-button:hover {
+            background: #FFDD00;
+        }
+        .product-specs {
+            background: #F5F5F5;
+            padding: 15px;
+            border: 1px solid #CCCCCC;
+            margin: 15px 0;
+        }
+        .spec-row {
+            padding: 8px 0;
+            border-bottom: 1px solid #DDDDDD;
+        }
+        .spec-label {
+            font-weight: bold;
+            color: #666;
+        }
+        .breadcrumb {
+            padding: 10px 0;
+            font-size: 12px;
+            color: #666;
+        }
+        .quantity-selector {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 10px 0;
+        }
+        .quantity-selector input {
+            width: 60px;
+            text-align: center;
+            padding: 5px;
+            font-size: 14px;
+        }
+        .loading-msg {
+            text-align: center;
+            padding: 100px 20px;
+            font-size: 18px;
+            color: #666;
+        }
+        .error-msg {
+            text-align: center;
+            padding: 100px 20px;
+            font-size: 16px;
+            color: #CC0000;
+        }
+    </style>
+</head>
+<body onload="loadProduct()">
+
+<!-- Header -->
+<table width="100%" border="0" cellpadding="0" cellspacing="0" bgcolor="#FFFFFF">
+    <tr>
+        <td>
+            <table width="980" border="0" align="center" cellpadding="5" cellspacing="0">
+                <tr>
+                    <td width="300">
+                        <a href="index.html" style="text-decoration: none;">
+                            <font size="6" color="#CC0000"><b>TRASHEDGOODS.STORE</b></font>
+                        </a>
+                    </td>
+                    <td align="right">
+                        <font size="2">
+                        <a href="#">Register</a> |
+                        <a href="#">Sign In</a> |
+                        <a href="#">Help</a> |
+                        <a href="#">My Account</a> |
+                        <a href="../admin-panel.html">Admin</a>
+                        </font>
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+</table>
+
+<!-- Search Bar -->
+<table width="100%" border="0" cellpadding="0" cellspacing="0" bgcolor="#F5F5F5">
+    <tr>
+        <td height="50">
+            <table width="980" border="0" align="center" cellpadding="5" cellspacing="0">
+                <tr>
+                    <td>
+                        <form method="get" action="index.html">
+                            <table border="0" cellpadding="0" cellspacing="0">
+                                <tr>
+                                    <td>
+                                        <select name="category">
+                                            <option>All Categories</option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <input type="text" name="search" size="50" placeholder="Search for anything" />
+                                    </td>
+                                    <td>
+                                        <input type="submit" value="Search" />
+                                    </td>
+                                    <td>&nbsp;&nbsp;
+                                        <a href="#"><b>Advanced Search</b></a>
+                                    </td>
+                                </tr>
+                            </table>
+                        </form>
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+</table>
+
+<!-- Navigation -->
+<table width="100%" border="0" cellpadding="0" cellspacing="0" bgcolor="#3366CC">
+    <tr>
+        <td height="30">
+            <table width="980" border="0" align="center" cellpadding="5" cellspacing="0">
+                <tr>
+                    <td>
+                        <font color="#FFFFFF" size="2">
+                        <b>
+                        <a href="index.html" style="color:#FFFFFF;">Back to Store</a> |
+                        <a href="#" style="color:#FFFFFF;">My TrashedGoods</a> |
+                        <a href="#" style="color:#FFFFFF;">Community</a> |
+                        <a href="#" style="color:#FFFFFF;">Customer Support</a>
+                        </b>
+                        </font>
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+</table>
+
+<!-- Main Content -->
+<table width="980" border="0" align="center" cellpadding="10" cellspacing="0">
+    <tr>
+        <td valign="top">
+            <div id="productContent">
+                <div class="loading-msg">Loading product details...</div>
+            </div>
+        </td>
+    </tr>
+</table>
+
+<!-- Footer -->
+<table width="100%" border="0" cellpadding="0" cellspacing="0" bgcolor="#F0F0F0">
+    <tr>
+        <td height="100">
+            <table width="980" border="0" align="center" cellpadding="10" cellspacing="0">
+                <tr>
+                    <td>
+                        <font size="1">
+                        <b>About TrashedGoods</b><br />
+                        <a href="#">About Us</a> |
+                        <a href="#">Policies</a> |
+                        <a href="#">Security Center</a><br /><br />
+
+                        Copyright 2008 TRASHEDGOODS.STORE Inc. All Rights Reserved.
+                        </font>
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+</table>
+
+<script>
+// Get product ID from URL
+function getProductId() {
+    const params = new URLSearchParams(window.location.search);
+    return params.get('id');
+}
+
+// Load product from database
+async function loadProduct() {
+    const productId = getProductId();
+    const container = document.getElementById('productContent');
+
+    if (!productId) {
+        container.innerHTML = '<div class="error-msg">No product ID specified. <a href="index.html">Return to store</a></div>';
+        return;
+    }
+
+    try {
+        const data = await window.db.loadProducts();
+        const product = data.products.find(p => p.id === productId);
+
+        if (!product) {
+            container.innerHTML = '<div class="error-msg">Product not found. <a href="index.html">Return to store</a></div>';
+            return;
+        }
+
+        displayProduct(product);
+    } catch (error) {
+        console.error('Error loading product:', error);
+        container.innerHTML = '<div class="error-msg">Error loading product. <a href="index.html">Return to store</a></div>';
+    }
+}
+
+// Display product details
+function displayProduct(product) {
+    const container = document.getElementById('productContent');
+    const images = product.images || ['https://via.placeholder.com/400'];
+    const price = parseFloat(product.price).toFixed(2);
+    const inStock = product.stock > 0;
+
+    // Format condition
+    const conditionFormatted = product.condition ?
+        product.condition.charAt(0).toUpperCase() + product.condition.slice(1) :
+        'Used';
+
+    // Calculate shipping estimate (fake)
+    const shippingPrice = (product.price * 0.1).toFixed(2);
+
+    // Build image gallery
+    let galleryHTML = `
+        <div class="product-gallery">
+            <img id="mainImage" src="${images[0]}" alt="${product.name}" class="main-image" />
+            <div class="thumbnail-container">
+    `;
+
+    images.forEach((img, index) => {
+        galleryHTML += `
+            <img src="${img}"
+                 alt="View ${index + 1}"
+                 class="thumbnail ${index === 0 ? 'active' : ''}"
+                 onclick="changeMainImage('${img}', this)" />
+        `;
+    });
+
+    galleryHTML += `
+            </div>
+        </div>
+    `;
+
+    const html = `
+        <div class="breadcrumb">
+            <a href="index.html">Home</a> &gt;
+            <a href="index.html?category=${encodeURIComponent(product.category || 'Other')}">${product.category || 'Other'}</a> &gt;
+            ${product.name}
+        </div>
+
+        <table width="100%" border="0" cellpadding="0" cellspacing="0">
+            <tr>
+                <td width="450" valign="top">
+                    ${galleryHTML}
+                </td>
+                <td width="20"></td>
+                <td valign="top">
+                    <font size="5"><b>${product.name}</b></font>
+                    <br /><br />
+
+                    <div class="price-box">
+                        <font size="2"><b>Buy It Now Price:</b></font><br />
+                        <font size="5" color="#CC0000"><b>$${price}</b></font><br />
+                        <font size="2" color="#666">
+                            ${inStock ? `${product.stock} available` : '<b style="color: #CC0000;">Out of Stock</b>'}
+                        </font>
+
+                        ${inStock ? `
+                        <div class="quantity-selector">
+                            <font size="2"><b>Quantity:</b></font>
+                            <input type="number" id="quantity" value="1" min="1" max="${product.stock}" />
+                        </div>
+
+                        <button class="buy-button" onclick="addToCart('${product.id}')">
+                            🛒 Add to Cart
+                        </button>
+                        ` : ''}
+                    </div>
+
+                    <table width="100%" border="1" cellpadding="8" cellspacing="0" bordercolor="#CCCCCC">
+                        <tr bgcolor="#F0F0F0">
+                            <td colspan="2"><b>Item Specifics</b></td>
+                        </tr>
+                        <tr>
+                            <td width="40%"><font size="2" class="spec-label">Condition:</font></td>
+                            <td><font size="2">${conditionFormatted}</font></td>
+                        </tr>
+                        <tr>
+                            <td><font size="2" class="spec-label">Category:</font></td>
+                            <td><font size="2">${product.category || 'Other'}</font></td>
+                        </tr>
+                        <tr>
+                            <td><font size="2" class="spec-label">Stock Available:</font></td>
+                            <td><font size="2">${product.stock}</font></td>
+                        </tr>
+                        <tr>
+                            <td><font size="2" class="spec-label">Shipping:</font></td>
+                            <td><font size="2">$${shippingPrice} (Standard)</font></td>
+                        </tr>
+                        <tr>
+                            <td><font size="2" class="spec-label">Returns:</font></td>
+                            <td><font size="2">30-day money back</font></td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+        </table>
+
+        <br />
+
+        <table width="100%" border="1" cellpadding="15" cellspacing="0" bordercolor="#CCCCCC" bgcolor="#FFFFFF">
+            <tr bgcolor="#F0F0F0">
+                <td><b>Description</b></td>
+            </tr>
+            <tr>
+                <td>
+                    <font size="2">
+                        ${product.description || 'No description available for this item.'}
+                    </font>
+                </td>
+            </tr>
+        </table>
+
+        <br />
+
+        <table width="100%" border="0" cellpadding="10" cellspacing="0" bgcolor="#F5F5F5">
+            <tr>
+                <td align="center">
+                    <font size="2">
+                        <b>Questions about this item?</b><br />
+                        <a href="#">Contact Seller</a> |
+                        <a href="#">Report Item</a> |
+                        <a href="#">Add to Watch List</a>
+                    </font>
+                </td>
+            </tr>
+        </table>
+    `;
+
+    container.innerHTML = html;
+}
+
+// Change main image when thumbnail is clicked
+function changeMainImage(imageUrl, thumbnailElement) {
+    document.getElementById('mainImage').src = imageUrl;
+
+    // Update active state
+    document.querySelectorAll('.thumbnail').forEach(thumb => {
+        thumb.classList.remove('active');
+    });
+    thumbnailElement.classList.add('active');
+}
+
+// Add to cart function (placeholder)
+function addToCart(productId) {
+    const quantity = parseInt(document.getElementById('quantity').value);
+
+    // Get existing cart from localStorage
+    let cart = JSON.parse(localStorage.getItem('tgs_cart') || '[]');
+
+    // Check if product already in cart
+    const existingItem = cart.find(item => item.productId === productId);
+
+    if (existingItem) {
+        existingItem.quantity += quantity;
+    } else {
+        cart.push({
+            productId: productId,
+            quantity: quantity,
+            addedAt: new Date().toISOString()
+        });
+    }
+
+    // Save cart
+    localStorage.setItem('tgs_cart', JSON.stringify(cart));
+
+    // Show confirmation
+    alert('✅ Item added to cart!\n\nQuantity: ' + quantity + '\nTotal items in cart: ' + cart.length);
+}
+</script>
+
+</body>
+</html>
