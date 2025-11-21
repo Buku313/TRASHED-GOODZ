@@ -111,23 +111,31 @@ class DatabaseAPI {
             const base64 = await this.fileToBase64(imageFile);
             const base64Data = base64.split(',')[1]; // Remove data:image/...;base64, prefix
 
-            // Upload to Imgur (anonymous upload - no API key needed!)
+            // Create form data for Imgur API
+            const formData = new FormData();
+            formData.append('image', base64Data);
+            formData.append('type', 'base64');
+
+            // Upload to Imgur (anonymous upload)
             const response = await fetch('https://api.imgur.com/3/image', {
                 method: 'POST',
                 headers: {
-                    'Authorization': 'Client-ID 546c25a59c58ad7', // Public Imgur client ID
+                    'Authorization': 'Client-ID 546c25a59c58ad7'
                 },
-                body: JSON.stringify({
-                    image: base64Data,
-                    type: 'base64'
-                })
+                body: formData
             });
 
             if (!response.ok) {
+                const errorText = await response.text();
+                console.error('Imgur error:', errorText);
                 throw new Error(`Upload failed: ${response.status}`);
             }
 
             const result = await response.json();
+            if (!result.success) {
+                throw new Error(result.data?.error || 'Upload failed');
+            }
+
             return result.data.link; // Returns the image URL
         } catch (error) {
             console.error('Error uploading image:', error);
