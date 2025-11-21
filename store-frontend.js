@@ -18,8 +18,11 @@ async function loadStoreProducts() {
 }
 
 function displayStoreProducts(products) {
-    // Find the items container (adapt to your existing HTML structure)
-    const container = document.getElementById('store-items');
+    // Find the items container - try both IDs
+    let container = document.getElementById('featuredItemsContainer');
+    if (!container) {
+        container = document.getElementById('store-items');
+    }
     if (!container) {
         console.warn('Store items container not found');
         return;
