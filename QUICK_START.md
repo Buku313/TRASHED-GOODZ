@@ -1,46 +1,73 @@
-# Quick Start: Auto-Save Setup
+# ⚡ QUICK START - Upload Products in 3 Easy Steps
 
-Your `github-config.js` file already has your token configured on your local machine. It will continue to work for auto-save! Here's what just happened:
+## Step 1: Get Free API Key (2 minutes)
 
-## What Changed (Security Fix)
+1. Go to https://jsonbin.io
+2. Sign up free (just email + password)
+3. Click "API Keys" → "Create Access Key"
+4. Copy the API key (starts with `$2a$10$...`)
 
-✅ Your `github-config.js` is now in `.gitignore` - it won't be pushed to GitHub anymore
-✅ Your token stays secure on your local machine only
-✅ Auto-save will still work perfectly for you
-✅ The repository now has `github-config.example.js` as a template for others
-
-## Your Auto-Save is Already Working!
-
-Since your `github-config.js` file already exists locally with your token, you can use auto-save right now:
-
-1. Go to: https://buku313.github.io/TRASHED-GOODZ/login.html
-2. Login (admin / trashedgoods2008)
-3. Make changes to items/categories
-4. Wait 2 seconds - see "✓ Saved to GitHub!"
-5. Changes go live in 1-2 minutes!
-
-## How It Works
-
-- **Your Computer:** Has `github-config.js` with your real token (local only)
-- **GitHub Repository:** Has `github-config.example.js` template (no token)
-- **Admin Panel:** Loads `github-config.js` from your computer
-- **Auto-Save:** Uses your local token to commit changes
-- **Everyone Else:** Sees the updated data.json after it's committed
-
-## If You Need to Reconfigure
-
-If you ever need to set this up on another computer:
+## Step 2: Push to GitHub (1 minute)
 
 ```bash
-cp github-config.example.js github-config.js
-# Edit github-config.js and add your token
-# The file stays local - never commit it!
+git add .
+git commit -m "Add product upload system"
+git push
 ```
 
-## Security Note
+## Step 3: Open Admin Panel (1 minute)
 
-Your GitHub token gives full access to your repositories. By keeping it in `.gitignore`, it stays secure on your computer only and never gets exposed in the public repository.
+1. Go to: `https://yourusername.github.io/yourrepo/admin-panel.html`
+2. **First time only**: Paste your API key from Step 1
+3. Set a password (or use default: `trashedgoods2008`)
+4. Click "Save & Continue"
+5. Login and start adding products!
 
 ---
 
-You're all set! Auto-save is enabled and secure. 🚀
+## That's It! 🎉
+
+Now you can:
+- ✅ Upload products with images (stored on Imgur - free!)
+- ✅ Manage inventory (draft/published/sold statuses)
+- ✅ Edit and delete products
+- ✅ Products automatically appear on your store
+
+---
+
+## How It Works
+
+**Your Setup:**
+- Admin panel hosted on GitHub Pages
+- API key stored in your browser (never committed to Git)
+- Products saved to JSONBin.io (free database)
+- Images uploaded to Imgur (free hosting)
+
+**100% Free. No Credit Card. Forever.**
+
+---
+
+## Need to Change Settings?
+
+Click the ⚙️ Settings icon (top right) in the admin panel to:
+- Update your API key
+- Change your password
+- View your Bin ID
+
+---
+
+## Add Products to Your Store
+
+In your [index.html](index.html), add these lines before `</head>`:
+
+```html
+<script src="db-config.js"></script>
+<script src="db-api.js"></script>
+<script src="store-frontend.js"></script>
+```
+
+Products will automatically load from your database!
+
+---
+
+Read [SETUP_GUIDE.md](SETUP_GUIDE.md) for detailed documentation and troubleshooting.
