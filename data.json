@@ -1,0 +1,259 @@
+{
+  "items": [
+    {
+      "id": 1,
+      "name": "Apple iPod Classic 80GB",
+      "price": "89.99",
+      "image": "https://via.placeholder.com/150x150?text=Item+1",
+      "bids": "0",
+      "timeLeft": "2h 15m left",
+      "info": "Buy It Now available"
+    },
+    {
+      "id": 2,
+      "name": "Sony PlayStation 3 Console",
+      "price": "249.00",
+      "image": "https://via.placeholder.com/150x150?text=Item+2",
+      "bids": "12",
+      "timeLeft": "1h 32m left",
+      "info": "Free shipping"
+    },
+    {
+      "id": 3,
+      "name": "Canon EOS Digital Rebel XTi",
+      "price": "399.99",
+      "image": "https://via.placeholder.com/150x150?text=Item+3",
+      "bids": "5",
+      "timeLeft": "3h 45m left",
+      "info": "New in box"
+    },
+    {
+      "id": 4,
+      "name": "Nintendo Wii Console Bundle",
+      "price": "199.99",
+      "image": "https://via.placeholder.com/150x150?text=Item+4",
+      "bids": "8",
+      "timeLeft": "4h 12m left",
+      "info": "Ships worldwide"
+    },
+    {
+      "id": 5,
+      "name": "Dell Inspiron Laptop 15.4\"",
+      "price": "449.00",
+      "image": "https://via.placeholder.com/150x150?text=Item+5",
+      "bids": "3",
+      "timeLeft": "5h 28m left",
+      "info": "Refurbished"
+    },
+    {
+      "id": 6,
+      "name": "Vintage Levi's Jeans Collection",
+      "price": "59.99",
+      "image": "https://via.placeholder.com/150x150?text=Item+6",
+      "bids": "1",
+      "timeLeft": "6h 03m left",
+      "info": "Excellent condition"
+    },
+    {
+      "id": 7,
+      "name": "313",
+      "price": "420",
+      "image": "https://cdn.mos.cms.futurecdn.net/aGz2Akyx8f52LmizgkuDki-1023-80.jpg",
+      "bids": "0",
+      "timeLeft": "",
+      "info": "dadadadad"
+    }
+  ],
+  "categories": [
+    {
+      "id": 1,
+      "name": "Antiques",
+      "link": "#"
+    },
+    {
+      "id": 2,
+      "name": "Art",
+      "link": "#"
+    },
+    {
+      "id": 3,
+      "name": "Books",
+      "link": "#"
+    },
+    {
+      "id": 4,
+      "name": "Business & Industrial",
+      "link": "#"
+    },
+    {
+      "id": 5,
+      "name": "Cameras & Photo",
+      "link": "#"
+    },
+    {
+      "id": 6,
+      "name": "Cell Phones & PDAs",
+      "link": "#"
+    },
+    {
+      "id": 7,
+      "name": "Clothing, Shoes & Accessories",
+      "link": "#"
+    },
+    {
+      "id": 8,
+      "name": "Coins & Paper Money",
+      "link": "#"
+    },
+    {
+      "id": 9,
+      "name": "Collectibles",
+      "link": "#"
+    },
+    {
+      "id": 10,
+      "name": "Computers & Networking",
+      "link": "#"
+    },
+    {
+      "id": 11,
+      "name": "Consumer Electronics",
+      "link": "#"
+    },
+    {
+      "id": 12,
+      "name": "Crafts",
+      "link": "#"
+    },
+    {
+      "id": 13,
+      "name": "Dolls & Bears",
+      "link": "#"
+    },
+    {
+      "id": 14,
+      "name": "DVDs & Movies",
+      "link": "#"
+    },
+    {
+      "id": 15,
+      "name": "Entertainment Memorabilia",
+      "link": "#"
+    },
+    {
+      "id": 16,
+      "name": "Gift Certificates",
+      "link": "#"
+    },
+    {
+      "id": 17,
+      "name": "Health & Beauty",
+      "link": "#"
+    },
+    {
+      "id": 18,
+      "name": "Home & Garden",
+      "link": "#"
+    },
+    {
+      "id": 19,
+      "name": "Jewelry & Watches",
+      "link": "#"
+    },
+    {
+      "id": 20,
+      "name": "Music",
+      "link": "#"
+    },
+    {
+      "id": 21,
+      "name": "Musical Instruments",
+      "link": "#"
+    },
+    {
+      "id": 22,
+      "name": "Pet Supplies",
+      "link": "#"
+    },
+    {
+      "id": 23,
+      "name": "Pottery & Glass",
+      "link": "#"
+    },
+    {
+      "id": 24,
+      "name": "Real Estate",
+      "link": "#"
+    },
+    {
+      "id": 25,
+      "name": "Sporting Goods",
+      "link": "#"
+    },
+    {
+      "id": 26,
+      "name": "Sports Mem, Cards & Fan Shop",
+      "link": "#"
+    },
+    {
+      "id": 27,
+      "name": "Stamps",
+      "link": "#"
+    },
+    {
+      "id": 28,
+      "name": "Tickets",
+      "link": "#"
+    },
+    {
+      "id": 29,
+      "name": "Toys & Hobbies",
+      "link": "#"
+    },
+    {
+      "id": 30,
+      "name": "Travel",
+      "link": "#"
+    },
+    {
+      "id": 31,
+      "name": "Video Games",
+      "link": "#"
+    },
+    {
+      "id": 32,
+      "name": "Everything Else",
+      "link": "#"
+    }
+  ],
+  "hotCategories": [
+    {
+      "id": 1,
+      "name": "Electronics",
+      "description": "Hot deals on laptops, cameras, and more!",
+      "image": "https://via.placeholder.com/100x100?text=Electronics",
+      "link": "#"
+    },
+    {
+      "id": 2,
+      "name": "Fashion",
+      "description": "Latest trends in clothing & shoes",
+      "image": "https://via.placeholder.com/100x100?text=Fashion",
+      "link": "#"
+    },
+    {
+      "id": 3,
+      "name": "Home & Garden",
+      "description": "Everything for your home",
+      "image": "https://via.placeholder.com/100x100?text=Home",
+      "link": "#"
+    },
+    {
+      "id": 4,
+      "name": "Collectibles",
+      "description": "Find rare & unique items",
+      "image": "https://via.placeholder.com/100x100?text=Collectibles",
+      "link": "#"
+    }
+  ]
+}
