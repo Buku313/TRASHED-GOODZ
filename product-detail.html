@@ -4,9 +4,10 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <title>Product Details - TRASHEDGOODS.STORE</title>
     <link rel="stylesheet" type="text/css" href="style.css" />
-    <script type="text/javascript" src="db-config.js"></script>
-    <script type="text/javascript" src="db-api.js"></script>
+    <script type="text/javascript" src="inventory-data.js"></script>
+    <script type="text/javascript" src="theme-utils.js"></script>
     <style>
+        
         .product-gallery {
             text-align: center;
             margin: 20px 0;
@@ -35,26 +36,26 @@
             border-color: #3366CC;
         }
         .price-box {
-            background: #FFFFCC;
+            background: #3daf43;
             padding: 15px;
-            border: 2px solid #FFCC00;
+            border: 2px solid #00ff15;
             margin: 15px 0;
         }
         .buy-button {
-            background: #FFCC00;
+            background: #33ff00;
             color: #000;
             padding: 12px 30px;
             font-size: 16px;
             font-weight: bold;
-            border: 2px solid #CC9900;
+            border: 2px solid #267900;
             cursor: pointer;
             width: 100%;
         }
         .buy-button:hover {
-            background: #FFDD00;
+            background: #ff00ff;
         }
         .product-specs {
-            background: #F5F5F5;
+            background: #3daf43;
             padding: 15px;
             border: 1px solid #CCCCCC;
             margin: 15px 0;
@@ -98,7 +99,7 @@
         }
     </style>
 </head>
-<body onload="loadProduct()">
+<body onload="initDetailPage()">
 
 <!-- Header -->
 <table width="100%" border="0" cellpadding="0" cellspacing="0" bgcolor="#FFFFFF">
@@ -222,7 +223,7 @@ function getProductId() {
     return params.get('id');
 }
 
-// Load product from database
+// Load product from the shared inventory JSON
 async function loadProduct() {
     const productId = getProductId();
     const container = document.getElementById('productContent');
@@ -233,8 +234,8 @@ async function loadProduct() {
     }
 
     try {
-        const data = await window.db.loadProducts();
-        const product = data.products.find(p => p.id === productId);
+        const data = await fetchInventoryData();
+        const product = (data.products || []).find(p => p.id === productId);
 
         if (!product) {
             container.innerHTML = '<div class="error-msg">Product not found. <a href="index.html">Return to store</a></div>';
@@ -255,15 +256,12 @@ function displayProduct(product) {
     const price = parseFloat(product.price).toFixed(2);
     const inStock = product.stock > 0;
 
-    // Format condition
     const conditionFormatted = product.condition ?
         product.condition.charAt(0).toUpperCase() + product.condition.slice(1) :
         'Used';
 
-    // Calculate shipping estimate (fake)
     const shippingPrice = (product.price * 0.1).toFixed(2);
 
-    // Build image gallery
     let galleryHTML = `
         <div class="product-gallery">
             <img id="mainImage" src="${images[0]}" alt="${product.name}" class="main-image" />
@@ -315,7 +313,7 @@ function displayProduct(product) {
                         </div>
 
                         <button class="buy-button" onclick="addToCart('${product.id}')">
-                            🛒 Add to Cart
+                            Add to Cart
                         </button>
                         ` : ''}
                     </div>
@@ -386,22 +384,16 @@ function displayProduct(product) {
 // Change main image when thumbnail is clicked
 function changeMainImage(imageUrl, thumbnailElement) {
     document.getElementById('mainImage').src = imageUrl;
-
-    // Update active state
-    document.querySelectorAll('.thumbnail').forEach(thumb => {
-        thumb.classList.remove('active');
-    });
+    document.querySelectorAll('.thumbnail').forEach(thumb => thumb.classList.remove('active'));
     thumbnailElement.classList.add('active');
 }
 
 // Add to cart function (placeholder)
 function addToCart(productId) {
-    const quantity = parseInt(document.getElementById('quantity').value);
+    const quantityInput = document.getElementById('quantity');
+    const quantity = quantityInput ? parseInt(quantityInput.value) : 1;
 
-    // Get existing cart from localStorage
     let cart = JSON.parse(localStorage.getItem('tgs_cart') || '[]');
-
-    // Check if product already in cart
     const existingItem = cart.find(item => item.productId === productId);
 
     if (existingItem) {
@@ -414,11 +406,13 @@ function addToCart(productId) {
         });
     }
 
-    // Save cart
     localStorage.setItem('tgs_cart', JSON.stringify(cart));
+    alert('🎉 Item added to cart!\n\nQuantity: ' + quantity + '\nTotal items in cart: ' + cart.length);
+}
 
-    // Show confirmation
-    alert('✅ Item added to cart!\n\nQuantity: ' + quantity + '\nTotal items in cart: ' + cart.length);
+function initDetailPage() {
+    applyStoredTheme();
+    loadProduct();
 }
 </script>
 

@@ -1,24 +1,101 @@
-// Simple Store Frontend
-// Loads products from JSONBin database
+// Storefront logic that reads inventory from a local JSON file
+
+function populateStoreMetadata(data) {
+    if (!data) {
+        renderCategories([]);
+        renderHotCategories([]);
+        return;
+    }
+
+    const categories = Array.isArray(data.categories) ? data.categories : [];
+    renderCategories(categories);
+    renderHotCategories(getHotCategories({ products: data.products || [], categories }));
+}
+
+function renderCategories(categories) {
+    const container = document.getElementById('categoriesContainer');
+    if (!container) return;
+
+    if (categories.length === 0) {
+        container.innerHTML = '<span>No categories configured yet.</span>';
+        return;
+    }
+
+    container.innerHTML = categories.map(category => `
+        <a href="index.html?category=${encodeURIComponent(category)}">${category}</a><br />
+    `).join('');
+}
+
+function renderHotCategories(categories) {
+    const container = document.getElementById('hotCategoriesContainer');
+    if (!container) return;
+
+    if (categories.length === 0) {
+        container.innerHTML = '<td colspan="4"><font size="2">Hot categories coming soon.</font></td>';
+        return;
+    }
+
+    const width = Math.max(Math.floor(100 / categories.length), 1);
+    container.innerHTML = categories.map(category => `
+        <td width="${width}%" valign="top">
+            <font size="2">
+                <a href="index.html?category=${encodeURIComponent(category)}" style="color:#FFFFFF;">
+                    ${category}
+                </a>
+            </font>
+        </td>
+    `).join('');
+}
+
+function getHotCategories(data) {
+    const categoryCounts = {};
+    (data.products || []).forEach(product => {
+        const category = product.category || 'Other';
+        categoryCounts[category] = (categoryCounts[category] || 0) + 1;
+    });
+
+    const sortedProductCategories = Object.keys(categoryCounts).sort(
+        (a, b) => categoryCounts[b] - categoryCounts[a]
+    );
+
+    const combined = Array.from(new Set([
+        ...sortedProductCategories,
+        ...(Array.isArray(data.categories) ? data.categories : [])
+    ]));
+
+    if (combined.length === 0) {
+        return ['Other'];
+    }
+
+    return combined.slice(0, 4);
+}
+
+async function loadStoreData() {
+    try {
+        const data = window.__trashedGoodsData || await fetchInventoryData();
+        populateStoreMetadata(data);
+    } catch (error) {
+        console.error('Error loading store metadata:', error);
+        populateStoreMetadata({ products: [], categories: [] });
+    }
+}
 
 async function loadStoreProducts() {
     try {
-        const data = await window.db.loadProducts();
-        const products = data.products || [];
+        const data = await fetchInventoryData();
+        populateStoreMetadata(data);
 
-        // Filter only published products
+        const products = data.products || [];
         const publishedProducts = products.filter(p => p.status === 'published' && p.stock > 0);
 
         displayStoreProducts(publishedProducts);
     } catch (error) {
         console.error('Error loading products:', error);
-        // Fall back to old data.json if database fails
-        loadFallbackProducts();
+        displayStoreProducts([]);
     }
 }
 
 function displayStoreProducts(products) {
-    // Find the items container - try both IDs
     let container = document.getElementById('featuredItemsContainer');
     if (!container) {
         container = document.getElementById('store-items');
@@ -75,32 +152,8 @@ function displayStoreProducts(products) {
     container.innerHTML = html;
 }
 
-async function loadFallbackProducts() {
-    try {
-        const response = await fetch('data.json');
-        const data = await response.json();
-
-        // Convert old format to new format
-        const products = (data.items || []).map(item => ({
-            id: item.id,
-            name: item.name,
-            price: parseFloat(item.price),
-            images: [item.image],
-            description: item.info || '',
-            status: 'published',
-            stock: 1,
-            category: 'Other'
-        }));
-
-        displayStoreProducts(products);
-    } catch (error) {
-        console.error('Error loading fallback products:', error);
-    }
-}
-
-// Auto-load products when page loads
-if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', loadStoreProducts);
-} else {
+function initializeFrontPage() {
+    initThemeToggle('themeToggle');
+    loadStoreData();
     loadStoreProducts();
 }

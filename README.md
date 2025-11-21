@@ -1,93 +1,63 @@
 # TRASHEDGOODS.STORE - Frontend Only
 
-This folder contains **only the files needed** to display your store products on the front-end.
-
-## 🎉 New Features
-
-### ✅ Fully Featured Product Detail Pages
-- Click any product to view detailed information
-- Image gallery with thumbnail navigation
-- Complete product specifications
-- Add to cart functionality
-- Breadcrumb navigation
+This folder contains the **customer-facing storefront** for TRASHEDGOODS. It no longer talks to JSONBin or any hosted database—everything is driven from the local `data/products.json` file so you can keep the repo private and just edit one JSON file whenever you want to publish products.
 
 ## Files Included
 
-1. **index.html** - The main store page (displays products)
-2. **product-detail.html** - Individual product detail pages (NEW!)
-3. **style.css** - Styling for the store
-4. **db-config.js** - Database configuration helper
-5. **db-api.js** - Database API for loading products from JSONBin
-6. **store-frontend.js** - Frontend logic to display products
+1. **index.html** – Main store page that renders featured listings, categories, and highlights.
+2. **product-detail.html** – Standalone detail view with gallery, specs, and stock indicator.
+3. **style.css** – Shared styling for tables, buttons, and layout.
+4. **inventory-data.js** – Shared helper that loads `data/products.json`.
+5. **store-frontend.js** – Page logic for loading products, categories, and rendering the listing grid.
+6. **data/products.json** – Source of truth for inventory. Contains demo products so the site works immediately.
 
 ## How It Works
 
-The store automatically:
-1. Loads products from your JSONBin database
-2. Filters to show only **published** products with stock > 0
-3. Displays them in the "Featured Listings" section
+1. `inventory-data.js` fetches `data/products.json` and caches it in `window.__trashedGoodsData`.
+2. `store-frontend.js` renders categories, hot categories, and featured listings from that data.
+3. `product-detail.html` reuses the same inventory file to show the individual product page.
+4. All products must be marked with `"status": "published"` and have `stock > 0` to appear on the storefront.
 
-## Setup
+The navigation bar includes a Dark Mode toggle that stores your preference in `localStorage`, so the theme persists between visits across both the storefront and product-detail pages via `theme-utils.js`.
 
-### Option 1: Use with existing JSONBin database
+## Inventory Data (JSON-Managed CMS)
 
-If you already have products in the admin panel:
+When you need to add or update products, edit `data/products.json`. The file follows this shape:
 
-1. Open `index.html` in your browser
-2. Products will automatically load from your configured JSONBin database
-3. Done!
+```json
+{
+  "categories": ["Electronics", "Fashion", "Home & Garden"],
+  "products": [
+    {
+      "id": "prod-005",
+      "name": "Rebuilt Game Console",
+      "description": "Been refurbished with new internals and a modern finish.",
+      "price": 349.99,
+      "condition": "used",
+      "stock": 8,
+      "status": "published",
+      "category": "Electronics",
+      "images": [
+        "https://example.com/path/to/image.jpg"
+      ]
+    }
+  ]
+}
+```
 
-### Option 2: Start fresh
+Key requirements:
 
-If you want to start over:
+- `id` should be unique for each product (it’s what the detail page uses).
+- `price` can be a number or numeric string; the storefront formats it.
+- `images` is an array of URLs; the first image is used for listings.
+- `status` must be `"published"` and `stock` must be > 0 for the product to show up.
 
-1. Delete your localStorage data (in browser console):
-   ```javascript
-   localStorage.clear()
-   ```
-2. Open `index.html`
-3. Go to admin panel to configure new JSONBin API key
-4. Add products in admin panel
-5. They'll appear on the frontend automatically
-
-## No Admin Features
-
-This folder does **NOT** include:
-- ❌ Admin panel
-- ❌ Login page
-- ❌ Product upload/edit functionality
-- ❌ Image upload system
-
-It **ONLY** displays products that are already published.
-
-## To Add/Edit Products
-
-You need to use the enhanced admin panel:
-1. Go back to the main project folder
-2. Open `admin-panel.html`
-3. Login and manage products there
-4. Products will appear on this frontend automatically
-
-**New Admin Features:**
-- 📸 Drag & drop image upload (desktop)
-- 📱 Mobile camera support
-- 🖼️ Image reordering (drag thumbnails)
-- 📊 Real-time progress bar
-- ✨ Better compression (1200px, 85% quality)
-- 🔄 Multi-service fallback (imgbb/Cloudinary/base64)
-
-See [../IMAGE_UPLOAD_GUIDE.md](../IMAGE_UPLOAD_GUIDE.md) for complete guide.
+After editing `data/products.json`, reload `index.html` and every customer will immediately see the change. There is no admin panel or database configuration in this folder—this is a static JSON-managed CMS.
 
 ## Hosting
 
-You can host just these 5 files on any web server:
-- GitHub Pages
-- Netlify
-- Vercel
-- Any static hosting
-
-The products will load from your JSONBin database automatically.
+The folder can be deployed anywhere static files are supported (GitHub Pages, Netlify, Vercel, S3, etc.). Simply upload the files and ensure `data/products.json` is included. Because the data is local, the storefront works offline as long as the JSON file is present.
 
 ---
 
-**This is a clean, minimal frontend** - perfect for deploying just the customer-facing store!
+**This is a lean, front-end-only storefront**—perfect for a private rollout or quick demo where the catalog is maintained by editing one JSON file. Adjust `data/products.json`, commit, and redeploy whenever new inventory is ready.
