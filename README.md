@@ -1,88 +1,93 @@
-# TRASHEDGOODS.STORE
+# TRASHEDGOODS.STORE - Frontend Only
 
-A nostalgic 2008-style eBay marketplace built with classic HTML tables and minimal CSS.
+This folder contains **only the files needed** to display your store products on the front-end.
 
-## Live Site
+## 🎉 New Features
 
-Visit the store at: https://buku313.github.io/TRASHED-GOODZ/
+### ✅ Fully Featured Product Detail Pages
+- Click any product to view detailed information
+- Image gallery with thumbnail navigation
+- Complete product specifications
+- Add to cart functionality
+- Breadcrumb navigation
 
-## Admin Access
+## Files Included
 
-**Login Page:** https://buku313.github.io/TRASHED-GOODZ/login.html
+1. **index.html** - The main store page (displays products)
+2. **product-detail.html** - Individual product detail pages (NEW!)
+3. **style.css** - Styling for the store
+4. **db-config.js** - Database configuration helper
+5. **db-api.js** - Database API for loading products from JSONBin
+6. **store-frontend.js** - Frontend logic to display products
 
-**Default Credentials:**
-- Username: `admin`
-- Password: `trashedgoods2008`
+## How It Works
 
-## 🚀 Auto-Save Feature (Seamless Experience)
+The store automatically:
+1. Loads products from your JSONBin database
+2. Filters to show only **published** products with stock > 0
+3. Displays them in the "Featured Listings" section
 
-**NEW!** Changes now automatically save to GitHub and go live in 1-2 minutes!
+## Setup
 
-### Setup Auto-Save (One-Time Configuration)
+### Option 1: Use with existing JSONBin database
 
-1. **Create GitHub Token:** https://github.com/settings/tokens
-   - Click "Generate new token (classic)"
-   - Enable "repo" permission
-   - Copy the token
+If you already have products in the admin panel:
 
-2. **Configure (LOCAL ONLY):**
-   ```bash
-   cp github-config.example.js github-config.js
+1. Open `index.html` in your browser
+2. Products will automatically load from your configured JSONBin database
+3. Done!
+
+### Option 2: Start fresh
+
+If you want to start over:
+
+1. Delete your localStorage data (in browser console):
+   ```javascript
+   localStorage.clear()
    ```
-   Then edit `github-config.js` and paste your token (this file is gitignored - never commit it!)
+2. Open `index.html`
+3. Go to admin panel to configure new JSONBin API key
+4. Add products in admin panel
+5. They'll appear on the frontend automatically
 
-3. **Done!** Now when you add/edit/delete items in the admin panel, they automatically save to GitHub!
+## No Admin Features
 
-**See [SETUP_AUTO_SAVE.md](SETUP_AUTO_SAVE.md) for detailed instructions.**
+This folder does **NOT** include:
+- ❌ Admin panel
+- ❌ Login page
+- ❌ Product upload/edit functionality
+- ❌ Image upload system
 
-## How to Update Products
+It **ONLY** displays products that are already published.
 
-### With Auto-Save (Recommended)
-1. Login to admin panel
-2. Make your changes (add/edit/delete items, categories, etc.)
-3. Wait 2 seconds - you'll see "✓ Saved to GitHub!"
-4. Done! Changes go live in 1-2 minutes
+## To Add/Edit Products
 
-### Manual Method (If Auto-Save Not Configured)
-1. Login to admin panel
-2. Make your changes
-3. Click "Export Data to File"
-4. Save as `data.json` and replace the file in your repo
-5. Commit and push to GitHub
+You need to use the enhanced admin panel:
+1. Go back to the main project folder
+2. Open `admin-panel.html`
+3. Login and manage products there
+4. Products will appear on this frontend automatically
 
-## Important Notes
+**New Admin Features:**
+- 📸 Drag & drop image upload (desktop)
+- 📱 Mobile camera support
+- 🖼️ Image reordering (drag thumbnails)
+- 📊 Real-time progress bar
+- ✨ Better compression (1200px, 85% quality)
+- 🔄 Multi-service fallback (imgbb/Cloudinary/base64)
 
-- **Changes in admin panel are LOCAL only** - They're saved in your browser's localStorage
-- **Everyone sees the data.json file** - You must export and commit to make changes public
-- Admin session expires after 24 hours
-- To change the admin password, edit `login.html` (lines 17-18)
+See [../IMAGE_UPLOAD_GUIDE.md](../IMAGE_UPLOAD_GUIDE.md) for complete guide.
 
-## Files Structure
+## Hosting
 
-- `index.html` - Main store page
-- `login.html` - Admin login page
-- `admin.html` - Admin control panel
-- `data.json` - **Product data (everyone sees this)**
-- `store.js` - Frontend JavaScript (loads data.json)
-- `admin.js` - Admin panel JavaScript
-- `style.css` - 2008-style CSS
+You can host just these 5 files on any web server:
+- GitHub Pages
+- Netlify
+- Vercel
+- Any static hosting
 
-## Features
-
-- 2008 eBay-inspired design with heavy HTML tables
-- Password-protected admin panel
-- Manage featured items, categories, and hot categories
-- Export/import functionality for data persistence
-- Works on GitHub Pages (static hosting)
-
-## Tech Stack
-
-- Pure HTML (XHTML 1.0 Transitional)
-- Vanilla JavaScript (ES5 for compatibility)
-- Minimal CSS
-- localStorage for admin editing
-- JSON file for public data storage
+The products will load from your JSONBin database automatically.
 
 ---
 
-**2008 TRASHEDGOODS.STORE Inc. All Rights Reserved.**
+**This is a clean, minimal frontend** - perfect for deploying just the customer-facing store!

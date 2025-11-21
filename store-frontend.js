@@ -41,10 +41,12 @@ function displayStoreProducts(products) {
         html += `
             <tr>
                 <td width="150" align="center" valign="top">
-                    <img src="${imageUrl}" width="150" height="150" style="object-fit: cover;" alt="${product.name}" />
+                    <a href="product-detail.html?id=${product.id}">
+                        <img src="${imageUrl}" width="150" height="150" style="object-fit: cover; border: 1px solid #CCCCCC;" alt="${product.name}" />
+                    </a>
                 </td>
                 <td valign="top">
-                    <font size="3"><b><a href="#">${product.name}</a></b></font><br />
+                    <font size="3"><b><a href="product-detail.html?id=${product.id}">${product.name}</a></b></font><br />
                     <font size="2" color="#666">
                         ${product.description || 'No description available'}
                     </font><br />
@@ -56,7 +58,9 @@ function displayStoreProducts(products) {
                     <font size="3" color="#CC0000"><b>$${price}</b></font>
                 </td>
                 <td width="120" align="center" valign="top">
-                    <font size="2" color="#28a745"><b>Buy It Now</b></font>
+                    <a href="product-detail.html?id=${product.id}" style="text-decoration: none;">
+                        <font size="2" color="#28a745"><b>Buy It Now</b></font>
+                    </a>
                 </td>
                 <td width="100" align="center" valign="top">
                     <font size="2" color="#666">${product.category || 'Other'}</font>
