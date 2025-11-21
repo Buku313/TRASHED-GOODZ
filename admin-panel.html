@@ -442,22 +442,39 @@ function saveSetup() {
 function showSettings() {
     const apiKey = getAPIKey() || '';
     const binId = getBinId() || 'Not created yet';
-    const currentPassword = getAdminPassword();
+    const imgbbKey = localStorage.getItem('tgs_imgbb_api_key') || '';
 
-    const newApiKey = prompt('Enter new JSONBin API Key (or leave blank to keep current):', apiKey);
-    if (newApiKey !== null && newApiKey.trim()) {
-        setAPIKey(newApiKey.trim());
-        alert('API key updated!');
-    }
+    let settingsMsg = '=== SETTINGS ===\n\n';
+    settingsMsg += '1. Update JSONBin API Key\n';
+    settingsMsg += '2. Update imgbb API Key (for image uploads)\n';
+    settingsMsg += '3. Change Admin Password\n';
+    settingsMsg += '4. View Bin ID\n';
+    settingsMsg += '5. Cancel\n\n';
 
-    const changePassword = confirm('Do you want to change your admin password?');
-    if (changePassword) {
+    const choice = prompt(settingsMsg + 'Enter option (1-5):');
+
+    if (choice === '1') {
+        const newApiKey = prompt('Enter new JSONBin API Key:', apiKey);
+        if (newApiKey && newApiKey.trim()) {
+            setAPIKey(newApiKey.trim());
+            alert('✅ JSONBin API key updated!');
+        }
+    } else if (choice === '2') {
+        const msg = 'To get a free imgbb API key:\n\n1. Go to https://api.imgbb.com/\n2. Click "Get API Key"\n3. Sign up (free, no credit card)\n4. Copy your API key\n\nEnter your imgbb API key:';
+        const newImgbbKey = prompt(msg, imgbbKey);
+        if (newImgbbKey && newImgbbKey.trim()) {
+            localStorage.setItem('tgs_imgbb_api_key', newImgbbKey.trim());
+            alert('✅ imgbb API key saved! You can now upload images.');
+        }
+    } else if (choice === '3') {
         const newPassword = prompt('Enter new admin password:');
         if (newPassword && newPassword.trim()) {
             setAdminPassword(newPassword.trim());
-            alert('Password updated! Please re-login.');
+            alert('✅ Password updated! Please re-login.');
             logout();
         }
+    } else if (choice === '4') {
+        alert('Your Bin ID:\n\n' + (binId || 'Not created yet - will be created on first save'));
     }
 }
 

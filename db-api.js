@@ -104,39 +104,41 @@ class DatabaseAPI {
         }
     }
 
-    // Upload image to imgur (free image hosting)
+    // Upload image to imgbb (free image hosting)
     async uploadImage(imageFile) {
         try {
+            // Get imgbb API key from localStorage
+            const imgbbKey = localStorage.getItem('tgs_imgbb_api_key');
+
+            if (!imgbbKey) {
+                throw new Error('Image hosting not configured!\n\nTo upload images:\n1. Go to https://api.imgbb.com/\n2. Click "Get API Key" (free, no credit card)\n3. Copy your API key\n4. Click Settings ⚙️ in admin panel\n5. Enter your imgbb API key');
+            }
+
             // Convert image to base64
             const base64 = await this.fileToBase64(imageFile);
             const base64Data = base64.split(',')[1]; // Remove data:image/...;base64, prefix
 
-            // Create form data for Imgur API
+            // Create form data for imgbb API
             const formData = new FormData();
             formData.append('image', base64Data);
-            formData.append('type', 'base64');
 
-            // Upload to Imgur (anonymous upload)
-            const response = await fetch('https://api.imgur.com/3/image', {
+            const response = await fetch(`https://api.imgbb.com/1/upload?key=${imgbbKey}`, {
                 method: 'POST',
-                headers: {
-                    'Authorization': 'Client-ID 546c25a59c58ad7'
-                },
                 body: formData
             });
 
             if (!response.ok) {
                 const errorText = await response.text();
-                console.error('Imgur error:', errorText);
+                console.error('imgbb error:', errorText);
                 throw new Error(`Upload failed: ${response.status}`);
             }
 
             const result = await response.json();
             if (!result.success) {
-                throw new Error(result.data?.error || 'Upload failed');
+                throw new Error(result.error?.message || 'Upload failed');
             }
 
-            return result.data.link; // Returns the image URL
+            return result.data.url; // Returns the image URL
         } catch (error) {
             console.error('Error uploading image:', error);
             throw error;
