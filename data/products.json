@@ -9,20 +9,21 @@
     "products": [
         {
             "id": "prod-001",
-            "name": "DEAGLE BLAZE 3X MLG wAASSS",
+            "name": "deagle",
             "description": "Fully restored SX-70 with soft leather finish and working flash.",
-            "price": 42069.99,
+            "price": 189.99,
             "condition": "used",
             "stock": 4,
             "status": "published",
             "category": "Collectibles",
             "images": [
-                "https://cdn.esportfire-services.com/9690e259ccf2510eefd9915a433cdbe75cdb5610e99dbd30aaf306854b1c024c"
+                "https://media.discordapp.net/attachments/225803849489711105/1441562170935476406/Dota_allstars_game.webp?ex=69223ee4&is=6920ed64&hm=93bfed56a06bfd174052ab90926f7231b239c1a976643e740c09a8d378d3e667&=&format=webp&width=625&height=469",
+                "https://media.discordapp.net/attachments/225803849489711105/1441562171984052294/high.jpg?ex=69223ee4&is=6920ed64&hm=5fc5643617e18c1514786cf990f7f4cb8446281a2919a82797d302477832df14&=&format=webp&width=625&height=511"
             ]
         },
         {
             "id": "prod-002",
-            "name": "Carbon Fiber Track Cycling Shoes",
+            "name": "an actual fucking gun",
             "description": "Aerodynamic fit with breathable lining and replaceable cleats.",
             "price": 249.5,
             "condition": "new",
@@ -30,13 +31,13 @@
             "status": "published",
             "category": "Sporting Goods",
             "images": [
-                "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=600",
-                "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?w=600"
+                "https://media.discordapp.net/attachments/225803849489711105/1441562170637816021/ad6.jpg?ex=69223ee4&is=6920ed64&hm=e6c8b1361461840db510f3e26f94d2cec39913e19416c6366bc189ea341179af&=&format=webp&width=625&height=511",
+                "https://media.discordapp.net/attachments/225803849489711105/1441562170637816021/ad6.jpg?ex=69223ee4&is=6920ed64&hm=e6c8b1361461840db510f3e26f94d2cec39913e19416c6366bc189ea341179af&=&format=webp&width=625&height=511"
             ]
         },
         {
             "id": "prod-003",
-            "name": "Mid-century Apartment Lamp",
+            "name": "sum shorts i guess...",
             "description": "Brushed brass table lamp with velvet shade and dimmer switch.",
             "price": 134.0,
             "condition": "used",
@@ -44,12 +45,13 @@
             "status": "published",
             "category": "Home & Garden",
             "images": [
-                "https://images.unsplash.com/photo-1524758631624-e2822e304c36?w=600"
+                "https://media.discordapp.net/attachments/225803849489711105/1441616106275213322/WhatsApp_Image_2025-11-21_at_8.16.28_PM_4.jpeg?ex=6922711f&is=69211f9f&hm=ead5d5ccddc2aa7a6bfcd175bd8cccbb540dbebaaaf2fd90809bf41935bfb91c&=&format=webp&width=625&height=888",
+                "https://media.discordapp.net/attachments/225803849489711105/1441616106572746793/WhatsApp_Image_2025-11-21_at_8.16.28_PM_7.jpeg?ex=6922711f&is=69211f9f&hm=1f91b8af0dde1d51b7636321693fbe8189dc9f9bc4b140cc05279ba125466ce0&=&format=webp&width=625&height=834"
             ]
         },
         {
             "id": "prod-004",
-            "name": "Hand-painted Leather Satchel",
+            "name": "ligma inyection kit",
             "description": "Artisan bag with custom graffiti artwork, brass hardware, and lined interior.",
             "price": 215.25,
             "condition": "new",
@@ -57,7 +59,8 @@
             "status": "published",
             "category": "Fashion",
             "images": [
-                "https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=600"
+                "https://media.discordapp.net/attachments/225803849489711105/1441562170637816021/ad6.jpg?ex=69223ee4&is=6920ed64&hm=e6c8b1361461840db510f3e26f94d2cec39913e19416c6366bc189ea341179af&=&format=webp&width=625&height=511",
+                "https://media.discordapp.net/attachments/225803849489711105/1441562170637816021/ad6.jpg?ex=69223ee4&is=6920ed64&hm=e6c8b1361461840db510f3e26f94d2cec39913e19416c6366bc189ea341179af&=&format=webp&width=625&height=511"
             ]
         }
     ]
